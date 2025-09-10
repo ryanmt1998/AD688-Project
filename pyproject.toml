@@ -1,0 +1,21 @@
+[project]
+name = "ad688-project"
+version = "0.0.1"
+description = "Initial website for AD 688 Project GitHub"
+authors = [
+    {name = "Ryan Martin",email = "229983892+ryanmt1998@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = "^3.10"
+dependencies = [
+    "numpy (>=1.24,<2.0)",
+    "pandas (>=2.3.2,<3.0.0)",
+    "matplotlib (>=3.10.6,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "plotly (>=6.3.0,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
