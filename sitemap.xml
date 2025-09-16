@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
-    <lastmod>2025-09-10T17:32:51.770Z</lastmod>
+    <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
+    <lastmod>2025-09-16T19:10:21.109Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/about.html</loc>
-    <lastmod>2025-09-10T17:32:51.770Z</lastmod>
+    <lastmod>2025-09-16T19:10:21.109Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
+    <lastmod>2025-09-16T19:10:21.109Z</lastmod>
   </url>
 </urlset>
