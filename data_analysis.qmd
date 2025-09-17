@@ -20,6 +20,8 @@ format:
     df-print: paged
 ---
 
+## Dropping Unnecessary Columns 
+
 ```{python}
 import pandas as pd
 
