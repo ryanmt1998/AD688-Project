@@ -12,5 +12,12 @@
     "title": "About",
     "section": "",
     "text": "About this site"
+  },
+  {
+    "objectID": "data_analysis.html",
+    "href": "data_analysis.html",
+    "title": "Data Analysis",
+    "section": "",
+    "text": "import pandas as pd\n\ndf = pd.read_csv('lightcast_job_postings.csv')\n\ncolumns_to_drop = [\n    \"ID\", \"URL\", \"ACTIVE_URLS\", \"DUPLICATES\", \"LAST_UPDATED_TIMESTAMP\",\n    \"NAICS2\", \"NAICS3\", \"NAICS4\", \"NAICS5\", \"NAICS6\",\n    \"SOC_2\", \"SOC_3\", \"SOC_5\"\n]\ndf.drop(columns=columns_to_drop, inplace=True)\n\n/var/folders/qq/47j5nkg51c920z69wny6m_nh0000gn/T/ipykernel_55466/2789082856.py:3: DtypeWarning:\n\nColumns (19,30) have mixed types. Specify dtype option on import or set low_memory=False."
   }
 ]

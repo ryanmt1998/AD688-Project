@@ -20,3 +20,16 @@ format:
     df-print: paged
 ---
 
+```{python}
+import pandas as pd
+
+df = pd.read_csv('lightcast_job_postings.csv')
+
+columns_to_drop = [
+    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
+    "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
+    "SOC_2", "SOC_3", "SOC_5"
+]
+df.drop(columns=columns_to_drop, inplace=True)
+
+```
