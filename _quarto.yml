@@ -7,6 +7,10 @@ website:
     left:
       - href: index.qmd
         text: "Home"
+      - href: gender_politics.qmd
+        text: "Gender Politics"
+      - href: ai_vs_traditional.qmd
+        text: "Ai vs Traditional"
       - href: about.qmd
         text: "About"
       - href: research_introduction.qmd
