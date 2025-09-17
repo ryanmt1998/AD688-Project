@@ -20,7 +20,27 @@ format:
     df-print: paged
 ---
 
+
+
 ## Dropping Unnecessary Columns 
+
+The Unnecessary Columns:
+
+- ID 
+- URL
+- ACTIVE_URLS
+- DUPLICATES
+- LAST_UPDATED_TIMESTAMP
+- NAICS2
+- NAICS3
+- NAICS4
+- NAICS5
+- NAICS6
+- SOC_2
+- SOC_3
+- SOC_5
+
+With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.
 
 ```{python}
 import pandas as pd
@@ -34,4 +54,21 @@ columns_to_drop = [
 ]
 df.drop(columns=columns_to_drop, inplace=True)
 
+```
+
+```{python}
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, monotonically_increasing_id, when
+
+# Start Spark session
+spark = SparkSession.builder.appName("JobPostingsAnalysis").getOrCreate()
+
+# Load CSV file
+df = spark.read.option("header", "true").option("inferSchema", "true") \
+    .option("multiLine", "true").option("escape", "\"") \
+    .csv("lightcast_job_postings.csv")
+
+df.createOrReplaceTempView("jobs")
+df.printSchema()
+df.show(5, truncate=False)
 ```
