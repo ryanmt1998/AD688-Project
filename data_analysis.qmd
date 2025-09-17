@@ -20,25 +20,3 @@ format:
     df-print: paged
 ---
 
-# Import Data
-
-Importing dataset using PySpark. The code shows the schema and first few rows of the dataset. Schema is shown below but partial dataframe is muted.
-
-```{python}
-from pyspark.sql import SparkSession
-
-# Start a Spark session
-spark = SparkSession.builder.appName("JobPostingsAnalysis").getOrCreate()
-
-# Load the CSV file into a Spark DataFrame
-df = spark.read.option("header", "true").option("inferSchema", "true").option("multiLine","true").option("escape", "\"").csv("lightcast_job_postings.csv")
-
-df.createOrReplaceTempView("Jobs")
-# Show schema
-df.printSchema()
-```
-
-```{python}
-#| echo: false
-df.show(5, truncate=False)
-```

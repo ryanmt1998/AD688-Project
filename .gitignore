@@ -2,3 +2,6 @@
 .venv/*
 
 **/*.quarto_ipynb
+.pypirc
+lightcast_job_postings.csv
+spark-warehouse/
