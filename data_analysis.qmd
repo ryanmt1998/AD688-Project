@@ -25,7 +25,7 @@ format:
 ```{python}
 import pandas as pd
 
-df = pd.read_csv('lightcast_job_postings.csv')
+df = pd.read_csv('lightcast_job_postings.csv', low_memory=False)
 
 columns_to_drop = [
     "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",

@@ -167,8 +167,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dropping-unnecessary-columns" id="toc-dropping-unnecessary-columns" class="nav-link active" data-scroll-target="#dropping-unnecessary-columns"><span class="header-section-number">1</span> Dropping Unnecessary Columns</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -214,10 +220,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="cbf65183" class="cell" data-execution_count="1">
+<section id="dropping-unnecessary-columns" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="dropping-unnecessary-columns"><span class="header-section-number">1</span> Dropping Unnecessary Columns</h2>
+<div id="0bf0d515" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'lightcast_job_postings.csv'</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'lightcast_job_postings.csv'</span>, low_memory<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
@@ -225,15 +233,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SOC_2"</span>, <span class="st">"SOC_3"</span>, <span class="st">"SOC_5"</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df.drop(columns<span class="op">=</span>columns_to_drop, inplace<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/qq/47j5nkg51c920z69wny6m_nh0000gn/T/ipykernel_55466/2789082856.py:3: DtypeWarning:
-
-Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
-</code></pre>
-</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
