@@ -44,81 +44,17 @@ The Unnecessary Columns:
 With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.
 
 
-```{python}
-import pandas as pd
-
-df = pd.read_csv('lightcast_job_postings.csv', low_memory=False)
-
-columns_to_drop = [
-    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
-    "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
-    "SOC_2", "SOC_3", "SOC_5"
-]
-df.drop(columns=columns_to_drop, inplace=True)
-
-```
-
-## Handling Missing Values
-
-```{python}
-import missingno as msno
-import matplotlib.pyplot as plt
-
-# Visualize missing data
-msno.heatmap(df)
-plt.title("Missing Values Heatmap")
-plt.show()
-
-# Fill missing values for SALARY before dropping columns with many missing values
-if "SALARY" in df.columns:
-    df["SALARY"] = df["SALARY"].fillna(df["SALARY"].median())
-
-df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
-```
-
-## Remove Duplicates
-
-```{python}
-df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
-
-
-
-```
-
 ## Job Postings by Industry
-```{python}
 
-import plotly.express as px
-
-fig = px.bar(df["NAICS_2022_2_NAME"].value_counts(), 
-            title="Job Postings by Industry (NAICS 2-digit level)",
-            labels={"index": "Industry", "value": "Number of Job Postings"})
-fig.write_html('figures/job_postings_by_industry.html')
-```
 
 <iframe src="figures/job_postings_by_industry.html" width="100%" height="500px"></iframe>
 
 
 ## Salary Distribution by Industry
-```{python}
-import plotly.express as px
-fig = px.box(df, x="NAICS_2022_2_NAME", y="SALARY", title="Salary Distribution by Industry")
-fig.write_html('figures/salary_distribution_by_industry.html')
 
-
-```
 
 <iframe src="figures/salary_distribution_by_industry.html" width="100%" height="500px"></iframe>
 
 ## Remote vs. On-Site Jobs
-```{python}
-import plotly.express as px
-fig = px.pie(df, names="REMOTE_TYPE_NAME", title="Remote vs. On-Site Jobs")
-
-fig.write_html('figures/remote_vs_onsite_jobs.html')
-
-
-```
-
 
 <iframe src="figures/remote_vs_onsite_jobs.html" width="100%" height="500px"></iframe>

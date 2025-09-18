@@ -18,14 +18,14 @@
     "href": "data_analysis.html",
     "title": "Data Analysis",
     "section": "",
-    "text": "The Unnecessary Columns:\n\nID\nURL\nACTIVE_URLS\nDUPLICATES\nLAST_UPDATED_TIMESTAMP\nNAICS2\nNAICS3\nNAICS4\nNAICS5\nNAICS6\nSOC_2\nSOC_3\nSOC_5\n\nWith the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.\n\nimport pandas as pd\n\ndf = pd.read_csv('lightcast_job_postings.csv', low_memory=False)\n\ncolumns_to_drop = [\n    \"ID\", \"URL\", \"ACTIVE_URLS\", \"DUPLICATES\", \"LAST_UPDATED_TIMESTAMP\",\n    \"NAICS2\", \"NAICS3\", \"NAICS4\", \"NAICS5\", \"NAICS6\",\n    \"SOC_2\", \"SOC_3\", \"SOC_5\"\n]\ndf.drop(columns=columns_to_drop, inplace=True)"
+    "text": "The Unnecessary Columns:\n\nID\nURL\nACTIVE_URLS\nDUPLICATES\nLAST_UPDATED_TIMESTAMP\nNAICS2\nNAICS3\nNAICS4\nNAICS5\nNAICS6\nSOC_2\nSOC_3\nSOC_5\n\nWith the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings."
   },
   {
     "objectID": "data_analysis.html#dropping-unnecessary-columns",
     "href": "data_analysis.html#dropping-unnecessary-columns",
     "title": "Data Analysis",
     "section": "",
-    "text": "The Unnecessary Columns:\n\nID\nURL\nACTIVE_URLS\nDUPLICATES\nLAST_UPDATED_TIMESTAMP\nNAICS2\nNAICS3\nNAICS4\nNAICS5\nNAICS6\nSOC_2\nSOC_3\nSOC_5\n\nWith the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.\n\nimport pandas as pd\n\ndf = pd.read_csv('lightcast_job_postings.csv', low_memory=False)\n\ncolumns_to_drop = [\n    \"ID\", \"URL\", \"ACTIVE_URLS\", \"DUPLICATES\", \"LAST_UPDATED_TIMESTAMP\",\n    \"NAICS2\", \"NAICS3\", \"NAICS4\", \"NAICS5\", \"NAICS6\",\n    \"SOC_2\", \"SOC_3\", \"SOC_5\"\n]\ndf.drop(columns=columns_to_drop, inplace=True)"
+    "text": "The Unnecessary Columns:\n\nID\nURL\nACTIVE_URLS\nDUPLICATES\nLAST_UPDATED_TIMESTAMP\nNAICS2\nNAICS3\nNAICS4\nNAICS5\nNAICS6\nSOC_2\nSOC_3\nSOC_5\n\nWith the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings."
   },
   {
     "objectID": "data_analysis.html#handling-missing-values",
@@ -45,22 +45,22 @@
     "objectID": "data_analysis.html#job-postings-by-industry",
     "href": "data_analysis.html#job-postings-by-industry",
     "title": "Data Analysis",
-    "section": "4 Job Postings by Industry",
-    "text": "4 Job Postings by Industry\n\nimport plotly.express as px\n\nfig = px.bar(df[\"NAICS_2022_2_NAME\"].value_counts(), \n            title=\"Job Postings by Industry (NAICS 2-digit level)\",\n            labels={\"index\": \"Industry\", \"value\": \"Number of Job Postings\"})\nfig.write_html('figures/job_postings_by_industry.html')"
+    "section": "2 Job Postings by Industry",
+    "text": "2 Job Postings by Industry"
   },
   {
     "objectID": "data_analysis.html#salary-distribution-by-industry",
     "href": "data_analysis.html#salary-distribution-by-industry",
     "title": "Data Analysis",
-    "section": "5 Salary Distribution by Industry",
-    "text": "5 Salary Distribution by Industry\n\nimport plotly.express as px\nfig = px.box(df, x=\"NAICS_2022_2_NAME\", y=\"SALARY\", title=\"Salary Distribution by Industry\")\nfig.write_html('figures/salary_distribution_by_industry.html')"
+    "section": "3 Salary Distribution by Industry",
+    "text": "3 Salary Distribution by Industry"
   },
   {
     "objectID": "data_analysis.html#remote-vs.-on-site-jobs",
     "href": "data_analysis.html#remote-vs.-on-site-jobs",
     "title": "Data Analysis",
-    "section": "6 Remote vs. On-Site Jobs",
-    "text": "6 Remote vs. On-Site Jobs\n\nimport plotly.express as px\nfig = px.pie(df, names=\"REMOTE_TYPE_NAME\", title=\"Remote vs. On-Site Jobs\")\n\nfig.write_html('figures/remote_vs_onsite_jobs.html')"
+    "section": "4 Remote vs. On-Site Jobs",
+    "text": "4 Remote vs. On-Site Jobs"
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/numpy/random/LICENSE.html",
