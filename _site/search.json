@@ -46,21 +46,21 @@
     "href": "data_analysis.html#job-postings-by-industry",
     "title": "Data Analysis",
     "section": "4 Job Postings by Industry",
-    "text": "4 Job Postings by Industry\n\nimport plotly.express as px\n\nfig = px.bar(df[\"NAICS_2022_2_NAME\"].value_counts(), \n            title=\"Job Postings by Industry (NAICS 2-digit level)\",\n            labels={\"index\": \"Industry\", \"value\": \"Number of Job Postings\"})\nfig.show()"
+    "text": "4 Job Postings by Industry\n\nimport plotly.express as px\n\nfig = px.bar(df[\"NAICS_2022_2_NAME\"].value_counts(), \n            title=\"Job Postings by Industry (NAICS 2-digit level)\",\n            labels={\"index\": \"Industry\", \"value\": \"Number of Job Postings\"})\nfig.write_html('figures/job_postings_by_industry.html')"
   },
   {
     "objectID": "data_analysis.html#salary-distribution-by-industry",
     "href": "data_analysis.html#salary-distribution-by-industry",
     "title": "Data Analysis",
     "section": "5 Salary Distribution by Industry",
-    "text": "5 Salary Distribution by Industry\n\nimport plotly.express as px\nfig = px.box(df, x=\"NAICS_2022_2_NAME\", y=\"SALARY\", title=\"Salary Distribution by Industry\")\nfig.show()"
+    "text": "5 Salary Distribution by Industry\n\nimport plotly.express as px\nfig = px.box(df, x=\"NAICS_2022_2_NAME\", y=\"SALARY\", title=\"Salary Distribution by Industry\")\nfig.write_html('figures/salary_distribution_by_industry.html')"
   },
   {
     "objectID": "data_analysis.html#remote-vs.-on-site-jobs",
     "href": "data_analysis.html#remote-vs.-on-site-jobs",
     "title": "Data Analysis",
     "section": "6 Remote vs. On-Site Jobs",
-    "text": "6 Remote vs. On-Site Jobs\n\nimport plotly.express as px\nfig = px.pie(df, names=\"REMOTE_TYPE_NAME\", title=\"Remote vs. On-Site Jobs\")\nfig.show()"
+    "text": "6 Remote vs. On-Site Jobs\n\nimport plotly.express as px\nfig = px.pie(df, names=\"REMOTE_TYPE_NAME\", title=\"Remote vs. On-Site Jobs\")\n\nfig.write_html('figures/remote_vs_onsite_jobs.html')"
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/numpy/random/LICENSE.html",
