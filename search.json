@@ -49,18 +49,25 @@
     "text": "2 Job Postings by Industry"
   },
   {
+    "objectID": "data_analysis.html#test-for-github-commit-access",
+    "href": "data_analysis.html#test-for-github-commit-access",
+    "title": "Data Analysis",
+    "section": "3 Test for github commit access",
+    "text": "3 Test for github commit access"
+  },
+  {
     "objectID": "data_analysis.html#salary-distribution-by-industry",
     "href": "data_analysis.html#salary-distribution-by-industry",
     "title": "Data Analysis",
-    "section": "3 Salary Distribution by Industry",
-    "text": "3 Salary Distribution by Industry"
+    "section": "4 Salary Distribution by Industry",
+    "text": "4 Salary Distribution by Industry"
   },
   {
     "objectID": "data_analysis.html#remote-vs.-on-site-jobs",
     "href": "data_analysis.html#remote-vs.-on-site-jobs",
     "title": "Data Analysis",
-    "section": "4 Remote vs. On-Site Jobs",
-    "text": "4 Remote vs. On-Site Jobs"
+    "section": "5 Remote vs. On-Site Jobs",
+    "text": "5 Remote vs. On-Site Jobs"
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html",
