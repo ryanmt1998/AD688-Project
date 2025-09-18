@@ -20,13 +20,13 @@ format:
     df-print: paged
 ---
 
+## Dropping Unnecessary Columns
 
-
-## Dropping Unnecessary Columns 
 
 The Unnecessary Columns:
 
-- ID 
+
+- ID
 - URL
 - ACTIVE_URLS
 - DUPLICATES
@@ -40,7 +40,9 @@ The Unnecessary Columns:
 - SOC_3
 - SOC_5
 
+
 With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.
+
 
 ```{python}
 import pandas as pd
@@ -56,19 +58,26 @@ df.drop(columns=columns_to_drop, inplace=True)
 
 ```
 
+
 ```{python}
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, monotonically_increasing_id, when
+import missingno as msno
+import matplotlib.pyplot as plt
 
-# Start Spark session
-spark = SparkSession.builder.appName("JobPostingsAnalysis").getOrCreate()
+# Visualize missing data
+msno.heatmap(df)
+plt.title("Missing Values Heatmap")
+plt.show()
 
-# Load CSV file
-df = spark.read.option("header", "true").option("inferSchema", "true") \
-    .option("multiLine", "true").option("escape", "\"") \
-    .csv("lightcast_job_postings.csv")
+# Fill missing values for SALARY before dropping columns with many missing values
+if "SALARY" in df.columns:
+    df["SALARY"] = df["SALARY"].fillna(df["SALARY"].median())
 
-df.createOrReplaceTempView("jobs")
-df.printSchema()
-df.show(5, truncate=False)
+df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
 ```
+
+
+
+
+
+
+
