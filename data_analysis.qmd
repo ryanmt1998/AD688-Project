@@ -58,6 +58,7 @@ df.drop(columns=columns_to_drop, inplace=True)
 
 ```
 
+## Handling Missing Values
 
 ```{python}
 import missingno as msno
@@ -75,9 +76,43 @@ if "SALARY" in df.columns:
 df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
 ```
 
+## Remove Duplicates
+
+```{python}
+df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
 
 
 
+```
 
+## Job Postings by Industry
+```{python}
+
+import plotly.express as px
+
+fig = px.bar(df["NAICS_2022_2_NAME"].value_counts(), 
+            title="Job Postings by Industry (NAICS 2-digit level)",
+            labels={"index": "Industry", "value": "Number of Job Postings"})
+fig.show()
+```
+
+## Salary Distribution by Industry
+```{python}
+import plotly.express as px
+fig = px.box(df, x="NAICS_2022_2_NAME", y="SALARY", title="Salary Distribution by Industry")
+fig.show()
+
+
+```
+
+## Remote vs. On-Site Jobs
+```{python}
+import plotly.express as px
+fig = px.pie(df, names="REMOTE_TYPE_NAME", title="Remote vs. On-Site Jobs")
+fig.show()
+
+
+
+```
 
 
