@@ -132,8 +132,17 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dropping-unnecessary-columns" id="toc-dropping-unnecessary-columns" class="nav-link active" data-scroll-target="#dropping-unnecessary-columns"><span class="header-section-number">1</span> Dropping Unnecessary Columns</a></li>
+  <li><a href="#job-postings-by-industry" id="toc-job-postings-by-industry" class="nav-link" data-scroll-target="#job-postings-by-industry"><span class="header-section-number">2</span> Job Postings by Industry</a></li>
+  <li><a href="#salary-distribution-by-industry" id="toc-salary-distribution-by-industry" class="nav-link" data-scroll-target="#salary-distribution-by-industry"><span class="header-section-number">3</span> Salary Distribution by Industry</a></li>
+  <li><a href="#remote-vs.-on-site-jobs" id="toc-remote-vs.-on-site-jobs" class="nav-link" data-scroll-target="#remote-vs.-on-site-jobs"><span class="header-section-number">4</span> Remote vs.&nbsp;On-Site Jobs</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -179,8 +188,43 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="dropping-unnecessary-columns" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="dropping-unnecessary-columns"><span class="header-section-number">1</span> Dropping Unnecessary Columns</h2>
+<p>The Unnecessary Columns:</p>
+<ul>
+<li>ID</li>
+<li>URL</li>
+<li>ACTIVE_URLS</li>
+<li>DUPLICATES</li>
+<li>LAST_UPDATED_TIMESTAMP</li>
+<li>NAICS2</li>
+<li>NAICS3</li>
+<li>NAICS4</li>
+<li>NAICS5</li>
+<li>NAICS6</li>
+<li>SOC_2</li>
+<li>SOC_3</li>
+<li>SOC_5</li>
+</ul>
+<p>With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.</p>
+</section>
+<section id="job-postings-by-industry" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="job-postings-by-industry"><span class="header-section-number">2</span> Job Postings by Industry</h2>
+<iframe src="figures/job_postings_by_industry.html" width="100%" height="500px">
+</iframe>
+</section>
+<section id="salary-distribution-by-industry" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="salary-distribution-by-industry"><span class="header-section-number">3</span> Salary Distribution by Industry</h2>
+<iframe src="figures/salary_distribution_by_industry.html" width="100%" height="500px">
+</iframe>
+</section>
+<section id="remote-vs.-on-site-jobs" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="remote-vs.-on-site-jobs"><span class="header-section-number">4</span> Remote vs.&nbsp;On-Site Jobs</h2>
+<iframe src="figures/remote_vs_onsite_jobs.html" width="100%" height="500px">
+</iframe>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
