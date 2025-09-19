@@ -1,5 +1,5 @@
 ---
-title: "Ryan Martin, Saori Kikuchi, and Tracy Anyasi"
+title: "Ryan Martin and Tracy Anyasi"
 ---
 
 This is a Quarto website.

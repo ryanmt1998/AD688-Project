@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Ryan Martin, Saori Kikuchi, and Tracy Anyasi",
+    "title": "Ryan Martin and Tracy Anyasi",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
@@ -46,21 +46,21 @@
     "href": "data_analysis.html#job-postings-by-industry",
     "title": "Data Analysis",
     "section": "2 Job Postings by Industry",
-    "text": "2 Job Postings by Industry"
+    "text": "2 Job Postings by Industry\n\n\nThe amount of jobs an industry publishes is indicative of their growth, need for new talent, and increase in goals. Such values help improve the attractiveness of an industry to students, career changers or other industries looking to collaborate.\nThis barchart depicts the job postings by indursty, with a majority of postings within a select few industries. Professional, Scientific, and Technical Services has the highest amount of postings, amassing over 20,000. This lead is followed by other industries such as Unclassified Industries, Administartive and Support, Finance and Insurance, Manufacturing, Information, and Health Care and Social Assistance in descending value and number of job postings between 10,000 and 2,500.\nThe remaining industries amount to a much smaller number of postings, which indicates their low represenation. This lower hiring demand could be a result of disinterest in field from college graduates and skilled professionals or the lack of proper outreach about such industries to the general public. Either way, it is evident that the industries that deal with computer-based technology and information as a service, to varying degrees, have higher volumes of job postings to meet the demand of companies and other businesses within their sector."
   },
   {
     "objectID": "data_analysis.html#salary-distribution-by-industry",
     "href": "data_analysis.html#salary-distribution-by-industry",
     "title": "Data Analysis",
     "section": "3 Salary Distribution by Industry",
-    "text": "3 Salary Distribution by Industry"
+    "text": "3 Salary Distribution by Industry\n\n\nAs salary is a strong determining factors in people’s choice of career and deciding between industries, it is important to evaluate how 20+ industries published by NAICS compensate their talent across the board. Some industries like Retail Trade, Administrative services, Information, and Health Care and Social Assistance display large spreads and have extreme outliers, with a few between $300K and $400k.\nThe median and interquartile ranges also differ between industries. For example, the Arts, Entertainment, and Recreation industry has one of the tighter cluster of salaries, suggesting more consistent pay ranges in various subsectors and across titles and other levels of seniority. Unlike the other widespread industries, where salary expectations might differ drastically from company to company or region to region.\nOverall, this distribution highlights how industry choice can also affect earning potential in the long-run and cap salaries despite years of experience, skillset, or educational level."
   },
   {
     "objectID": "data_analysis.html#remote-vs.-on-site-jobs",
     "href": "data_analysis.html#remote-vs.-on-site-jobs",
     "title": "Data Analysis",
     "section": "4 Remote vs. On-Site Jobs",
-    "text": "4 Remote vs. On-Site Jobs"
+    "text": "4 Remote vs. On-Site Jobs\n\n\nAfter 2020, there has been a large influx of the necessity for work-life balance and that priority was heavily influenced by remote work that maintained industries during the COVID-19 lockdown mandates. However, as society moves past the time of quarantine, it is becoming a prevalent question on if these multitude of remote jobs that offer flexibilty would be carried along into the future.\nThe piechart shows how the lack of proper documentaion can affect analysis as 78.3% of jobs are not classified as remote, hybrid remote, or not remote. Although, this took up the larger portion of the diagram, 17% of those jobs are Remote, with another 3.11% being Hybrid remote (some days in-office and others virtually), which account for a fifith of all job postings. This demonstrates that flexible work arrangements are an important factor to both the industry, in terms of their expecations for performance, as well as applicants and their need to for a healthy balance between work and personal life.\nAdditionally, less than 2% of jobs are not Remote or are completely on-site which further corroborates the idea that employers prefer and adveritse flexibilty over strict in-person requirements."
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/numpy/random/LICENSE.html",
@@ -89,5 +89,12 @@
     "title": "Job Market Analysis 2024",
     "section": "",
     "text": "Copyright (c) 2016 Aleksey Bilogur\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+  },
+  {
+    "objectID": "data_analysis.html#test-for-github-commit-access",
+    "href": "data_analysis.html#test-for-github-commit-access",
+    "title": "Data Analysis",
+    "section": "3 Test for github commit access",
+    "text": "3 Test for github commit access"
   }
 ]
