@@ -1,4 +1,13 @@
 # Team Members’ Skill Proficiency Levels
+
+
+A numerical scale (1-5) to indicate proficiency levels:  
+- 1 = Beginner  
+- 2 = Basic Knowledge  
+- 3 = Intermediate  
+- 4 = Advanced  
+- 5 = Expert
+
 ```{python}
 #| echo: false
 import pandas as pd
@@ -6,9 +15,13 @@ import pandas as pd
 skills_data = {
     "Name": ["Tracy", "Ryan"],
     "Python": [3, 4],
-    "SQL": [4, 5,],
-    "Machine Learning": [2, 3],
-    "Cloud Computing": [2, 2]
+    "SQL": [4, 3,],
+    "Machine Learning": [2, 2],
+    "Cloud Computing": [2, 2],
+    "R": [3,4],
+    "AWS": [1,1]
+
+
 }
 
 df_skills = pd.DataFrame(skills_data)
@@ -34,7 +47,7 @@ plt.show()
 from collections import Counter
 
 # Assuming job_descriptions is a list of text from job postings
-top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing", "Docker", "AWS"]
+top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing","R", "Docker", "AWS"]
 job_skill_counts = Counter(top_skills)
 
 # Compare with team skill levels
@@ -44,3 +57,10 @@ for skill in top_skills:
 
 df_skills
 ```
+
+## Compare Team Skills to Industry Requirements
+
+Working in the IT department requires various technological skills, ones that Ryan and Tracy will need to meet industry requirements. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. Ryan and Tracy have good experience using Python, SQL, and R, but need to improve their efficiency in Machine Learning, and Cloud Computing, while familiarizing themselves with Docker and AWS, where they have little to no experience. 
+
+
+## Improvement Plan
