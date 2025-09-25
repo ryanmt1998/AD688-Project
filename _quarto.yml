@@ -7,22 +7,26 @@ website:
     left:
       - href: index.qmd
         text: "Home"
-      - href: gender_politics.qmd
-        text: "Gender Politics"
       - href: ai_vs_traditional.qmd
         text: "Ai vs Traditional"
-      - href: about.qmd
-        text: "About"
-      - href: research_introduction.qmd
-        text: "Research"
       - href: data_analysis.qmd
         text: "Data Analysis"
-      - href: career_plan.qmd
-        text: "Career Strategy"
+      - href: eda.qmd/ipynb
+        text: "Exploratory Data Analysis"
+      - href: skill_gap_analysis.qmd
+        text: "Skill Gap Analysis"
+      - href: ml_methods.qmd
+        text: "ML Methods"
+      - href: nlp_methods.qmd
+        text: "NLP Methods"
+
 format:
   html:
     theme: cosmo
     toc: true
-
+execute:
+  echo: true
+  eval: true
+  code-fold: true
 
 

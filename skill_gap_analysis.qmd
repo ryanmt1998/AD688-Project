@@ -1,0 +1,46 @@
+# Team Members’ Skill Proficiency Levels
+```{python}
+#| echo: false
+import pandas as pd
+
+skills_data = {
+    "Name": ["Tracy", "Ryan"],
+    "Python": [3, 4],
+    "SQL": [4, 5,],
+    "Machine Learning": [2, 3],
+    "Cloud Computing": [2, 2]
+}
+
+df_skills = pd.DataFrame(skills_data)
+df_skills.set_index("Name", inplace=True)
+df_skills
+```
+
+# Team Skill Levels Heatmap
+```{python}
+#| echo: false
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_skills, annot=True, cmap="coolwarm", linewidths=0.5)
+plt.title("Team Skill Levels Heatmap")
+plt.show()
+```
+
+# Job Market vs. Team Skill Coverage
+```{python}
+#| echo: false
+from collections import Counter
+
+# Assuming job_descriptions is a list of text from job postings
+top_skills = ["Python", "SQL", "Machine Learning", "Cloud Computing", "Docker", "AWS"]
+job_skill_counts = Counter(top_skills)
+
+# Compare with team skill levels
+for skill in top_skills:
+    if skill not in df_skills.columns:
+        df_skills[skill] = 0  # Assume no knowledge in missing skills
+
+df_skills
+```

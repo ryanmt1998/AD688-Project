@@ -96,5 +96,19 @@
     "title": "Data Analysis",
     "section": "3 Test for github commit access",
     "text": "3 Test for github commit access"
+  },
+  {
+    "objectID": "gender_politics.html",
+    "href": "gender_politics.html",
+    "title": "Job Market Analysis 2024",
+    "section": "",
+    "text": "import pandas as pd\n\nskills_data = {\n    \"Name\": [\"Tracy\", \"Ryan\"],\n    \"Python\": [3, 4],\n    \"SQL\": [4, 5,],\n    \"Machine Learning\": [2, 3],\n    \"Cloud Computing\": [2, 2]\n}\n\ndf_skills = pd.DataFrame(skills_data)\ndf_skills.set_index(\"Name\", inplace=True)\ndf_skills\n\n\n\n\n\n\n\n\nPython\nSQL\nMachine Learning\nCloud Computing\n\n\nName\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n\n\nRyan\n4\n5\n3\n2\n\n\n\n\n\n\n\n\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\nplt.figure(figsize=(8, 6))\nsns.heatmap(df_skills, annot=True, cmap=\"coolwarm\", linewidths=0.5)\nplt.title(\"Team Skill Levels Heatmap\")\nplt.show()\n\n\n\n\n\n\n\n\n\nfrom collections import Counter\n\n# Assuming job_descriptions is a list of text from job postings\ntop_skills = [\"Python\", \"SQL\", \"Machine Learning\", \"Cloud Computing\", \"Docker\", \"AWS\"]\njob_skill_counts = Counter(top_skills)\n\n# Compare with team skill levels\nfor skill in top_skills:\n    if skill not in df_skills.columns:\n        df_skills[skill] = 0  # Assume no knowledge in missing skills\n\ndf_skills\n\n\n\n\n\n\n\n\nPython\nSQL\nMachine Learning\nCloud Computing\nDocker\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n0\n0\n\n\nRyan\n4\n5\n3\n2\n0\n0"
+  },
+  {
+    "objectID": "skill_gap_analysis.html",
+    "href": "skill_gap_analysis.html",
+    "title": "Team Members’ Skill Proficiency Levels",
+    "section": "",
+    "text": "Python\nSQL\nMachine Learning\nCloud Computing\n\n\nName\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n\n\nRyan\n4\n5\n3\n2\n\n\n\n\n\n\n\n\nTeam Skill Levels Heatmap\n\n\n\n\n\n\n\n\n\n\n\nJob Market vs. Team Skill Coverage\n\n\n\n\n\n\n\n\n\nPython\nSQL\nMachine Learning\nCloud Computing\nDocker\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n0\n0\n\n\nRyan\n4\n5\n3\n2\n0\n0"
   }
 ]
