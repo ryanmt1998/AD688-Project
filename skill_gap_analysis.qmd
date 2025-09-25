@@ -1,3 +1,5 @@
+
+
 # Team Members’ Skill Proficiency Levels
 
 
@@ -64,3 +66,5 @@ Working in the IT department requires various technological skills, ones that Ry
 
 
 ## Improvement Plan
+
+Although there is room for improvement in their Python, SQL, and R skills, Ryan and Tracy should prioritize enhancing their efficiency in Machine Learning, Cloud Computing, AWS, and Docker, to achieve a well-rounded skill set. 
