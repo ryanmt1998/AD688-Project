@@ -16,12 +16,12 @@ import pandas as pd
 
 skills_data = {
     "Name": ["Tracy", "Ryan"],
-    "Python": [3, 4],
-    "SQL": [4, 3,],
+    "Python": [2, 4],
+    "SQL": [3, 3,],
     "Machine Learning": [2, 2],
     "Cloud Computing": [2, 2],
-    "R": [3,4],
-    "AWS": [1,1]
+    "R": [4,4],
+    "AWS": [2,1]
 
 
 }
@@ -62,9 +62,9 @@ df_skills
 
 ## Compare Team Skills to Industry Requirements
 
-Working in the IT department requires various technological skills, ones that Ryan and Tracy will need to meet industry requirements. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. Ryan and Tracy have good experience using Python, SQL, and R, but need to improve their efficiency in Machine Learning, and Cloud Computing, while familiarizing themselves with Docker and AWS, where they have little to no experience. 
+Working in the IT department requires a diverse set of skills that Ryan and Tracy will need to to develop to meet industry standards. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. While Ryan has solid experience with Python, SQL, and R, Tracy has only limited experience with Python. Both need to improve their proficiency in Machine Learning, Cloud Computing, and AWS while familiarizing themselves with Docker, where they currently have no experience.
 
 
 ## Improvement Plan
 
-Although there is room for improvement in their Python, SQL, and R skills, Ryan and Tracy should prioritize enhancing their efficiency in Machine Learning, Cloud Computing, AWS, and Docker, to achieve a well-rounded skill set. 
+Although there is room for improvement in Python, SQL, and R skills, Ryan should prioritize enhancing their efficiency in Machine Learning, Cloud Computing, AWS, and Docker to achieve a well-rounded skill set. The same can be said for Tracy, who can also work on her efficiency with Python.

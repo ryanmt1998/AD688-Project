@@ -109,20 +109,20 @@
     "href": "skill_gap_analysis.html",
     "title": "Team Members’ Skill Proficiency Levels",
     "section": "",
-    "text": "A numerical scale (1-5) to indicate proficiency levels:\n- 1 = Beginner\n- 2 = Basic Knowledge\n- 3 = Intermediate\n- 4 = Advanced\n- 5 = Expert\nPython\nSQL\nMachine Learning\nCloud Computing\nR\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n3\n1\n\n\nRyan\n4\n3\n2\n2\n4\n1"
+    "text": "A numerical scale (1-5) to indicate proficiency levels:\n- 1 = Beginner\n- 2 = Basic Knowledge\n- 3 = Intermediate\n- 4 = Advanced\n- 5 = Expert\nPython\nSQL\nMachine Learning\nCloud Computing\nR\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n2\n3\n2\n2\n4\n2\n\n\nRyan\n4\n3\n2\n2\n4\n1"
   },
   {
     "objectID": "skill_gap_analysis.html#compare-team-skills-to-industry-requirements",
     "href": "skill_gap_analysis.html#compare-team-skills-to-industry-requirements",
     "title": "Team Members’ Skill Proficiency Levels",
     "section": "Compare Team Skills to Industry Requirements",
-    "text": "Compare Team Skills to Industry Requirements\nWorking in the IT department requires various technological skills, ones that Ryan and Tracy will need to meet industry requirements. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. Ryan and Tracy have good experience using Python, SQL, and R, but need to improve their efficiency in Machine Learning, and Cloud Computing, while familiarizing themselves with Docker and AWS, where they have little to no experience."
+    "text": "Compare Team Skills to Industry Requirements\nWorking in the IT department requires a diverse set of skills that Ryan and Tracy will need to to develop to meet industry standards. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. While Ryan has solid experience with Python, SQL, and R, Tracy has only limited experience with Python. Both need to improve their proficiency in Machine Learning, Cloud Computing, and AWS while familiarizing themselves with Docker, where they currently have no experience."
   },
   {
     "objectID": "skill_gap_analysis.html#improvement-plan",
     "href": "skill_gap_analysis.html#improvement-plan",
     "title": "Team Members’ Skill Proficiency Levels",
     "section": "Improvement Plan",
-    "text": "Improvement Plan\nAlthough there is room for improvement in their Python, SQL, and R skills, Ryan and Tracy should prioritize enhancing their efficiency in Machine Learning, Cloud Computing, AWS, and Docker, to achieve a well-rounded skill set."
+    "text": "Improvement Plan\nAlthough there is room for improvement in their Python, SQL, and R skills, Ryan and Tracy should prioritize enhancing their efficiency in Machine Learning, Cloud Computing, AWS, and Docker to achieve a well-rounded skill set."
   }
 ]
