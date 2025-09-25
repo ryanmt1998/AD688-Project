@@ -60,7 +60,21 @@
     "href": "skill_gap_analysis.html",
     "title": "Team Members’ Skill Proficiency Levels",
     "section": "",
-    "text": "Python\nSQL\nMachine Learning\nCloud Computing\n\n\nName\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n\n\nRyan\n4\n5\n3\n2\n\n\n\n\n\n\n\n\nTeam Skill Levels Heatmap\n\n\n\n\n\n\n\n\n\n\n\nJob Market vs. Team Skill Coverage\n\n\n\n\n\n\n\n\n\nPython\nSQL\nMachine Learning\nCloud Computing\nDocker\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n0\n0\n\n\nRyan\n4\n5\n3\n2\n0\n0"
+    "text": "A numerical scale (1-5) to indicate proficiency levels:\n- 1 = Beginner\n- 2 = Basic Knowledge\n- 3 = Intermediate\n- 4 = Advanced\n- 5 = Expert\nPython\nSQL\nMachine Learning\nCloud Computing\nR\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n3\n1\n\n\nRyan\n4\n3\n2\n2\n4\n1"
+  },
+  {
+    "objectID": "skill_gap_analysis.html#compare-team-skills-to-industry-requirements",
+    "href": "skill_gap_analysis.html#compare-team-skills-to-industry-requirements",
+    "title": "Team Members’ Skill Proficiency Levels",
+    "section": "Compare Team Skills to Industry Requirements",
+    "text": "Compare Team Skills to Industry Requirements\nWorking in the IT department requires various technological skills, ones that Ryan and Tracy will need to meet industry requirements. The top skills in this line of work include experience with Python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. Ryan and Tracy have good experience using Python, SQL, and R, but need to improve their efficiency in Machine Learning, and Cloud Computing, while familiarizing themselves with Docker and AWS, where they have little to no experience."
+  },
+  {
+    "objectID": "skill_gap_analysis.html#improvement-plan",
+    "href": "skill_gap_analysis.html#improvement-plan",
+    "title": "Team Members’ Skill Proficiency Levels",
+    "section": "Improvement Plan",
+    "text": "Improvement Plan"
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html",
