@@ -11,7 +11,7 @@ website:
         text: "Ai vs Traditional"
       - href: data_analysis.qmd
         text: "Data Analysis"
-      - href: eda.qmd/ipynb
+      - href: eda.qmd
         text: "Exploratory Data Analysis"
       - href: skill_gap_analysis.qmd
         text: "Skill Gap Analysis"
