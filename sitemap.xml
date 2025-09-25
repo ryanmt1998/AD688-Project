@@ -2,58 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/narwhals-2.4.0.dist-info/licenses/LICENSE.html</loc>
-    <lastmod>2025-09-19T00:56:31.463Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.250Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/pandas/tests/indexes/period/test_indexing.html</loc>
-    <lastmod>2025-09-19T00:56:32.059Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.848Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/pandas/tests/indexes/datetimes/test_indexing.html</loc>
-    <lastmod>2025-09-19T00:56:32.048Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.837Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/seaborn-0.13.2.dist-info/LICENSE.html</loc>
-    <lastmod>2025-09-19T00:56:34.867Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/research_introduction.html</loc>
-    <lastmod>2025-09-19T00:56:25.729Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
-    <lastmod>2025-09-19T00:56:25.725Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/career_plan.html</loc>
-    <lastmod>2025-09-19T00:56:25.705Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/gender_politics.html</loc>
-    <lastmod>2025-09-19T00:56:25.725Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/about.html</loc>
-    <lastmod>2025-09-19T00:56:25.705Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
-    <lastmod>2025-09-19T00:56:25.705Z</lastmod>
+    <lastmod>2025-09-25T01:57:22.635Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
-    <lastmod>2025-09-19T00:56:25.705Z</lastmod>
+    <lastmod>2025-09-25T01:57:13.516Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/eda.html</loc>
+    <lastmod>2025-09-25T01:57:13.519Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/skill_gap_analysis.html</loc>
+    <lastmod>2025-09-25T01:57:13.540Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/nlp_methods.html</loc>
+    <lastmod>2025-09-25T01:57:13.536Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
+    <lastmod>2025-09-25T01:57:13.536Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
+    <lastmod>2025-09-25T01:57:13.515Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/ml_methods.html</loc>
+    <lastmod>2025-09-25T01:57:13.536Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html</loc>
-    <lastmod>2025-09-19T00:56:31.453Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.240Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/pandas/tests/indexes/period/test_constructors.html</loc>
-    <lastmod>2025-09-19T00:56:32.059Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.847Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/numpy/random/LICENSE.html</loc>
-    <lastmod>2025-09-19T00:56:31.762Z</lastmod>
+    <lastmod>2025-09-25T01:57:19.548Z</lastmod>
   </url>
 </urlset>

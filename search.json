@@ -14,20 +14,6 @@
     "text": "Copyright (c) 2012-2023, Michael L. Waskom All rights reserved.\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\nRedistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\nRedistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\nNeither the name of the project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Ryan Martin and Tracy Anyasi",
-    "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
     "objectID": "data_analysis.html",
     "href": "data_analysis.html",
     "title": "Data Analysis",
@@ -61,6 +47,20 @@
     "title": "Data Analysis",
     "section": "4 Remote vs. On-Site Jobs",
     "text": "4 Remote vs. On-Site Jobs\n\n\nAfter 2020, there has been a large influx of the necessity for work-life balance and that priority was heavily influenced by remote work that maintained industries during the COVID-19 lockdown mandates. However, as society moves past the time of quarantine, it is becoming a prevalent question on if these multitude of remote jobs that offer flexibilty would be carried along into the future.\nThe piechart shows how the lack of proper documentaion can affect analysis as 78.3% of jobs are not classified as remote, hybrid remote, or not remote. Although, this took up the larger portion of the diagram, 17% of those jobs are Remote, with another 3.11% being Hybrid remote (some days in-office and others virtually), which account for a fifith of all job postings. This demonstrates that flexible work arrangements are an important factor to both the industry, in terms of their expecations for performance, as well as applicants and their need to for a healthy balance between work and personal life.\nAdditionally, less than 2% of jobs are not Remote or are completely on-site which further corroborates the idea that employers prefer and adveritse flexibilty over strict in-person requirements."
+  },
+  {
+    "objectID": "skill_gap_analysis.html",
+    "href": "skill_gap_analysis.html",
+    "title": "Team Members’ Skill Proficiency Levels",
+    "section": "",
+    "text": "Python\nSQL\nMachine Learning\nCloud Computing\n\n\nName\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n\n\nRyan\n4\n5\n3\n2\n\n\n\n\n\n\n\n\nTeam Skill Levels Heatmap\n\n\n\n\n\n\n\n\n\n\n\nJob Market vs. Team Skill Coverage\n\n\n\n\n\n\n\n\n\nPython\nSQL\nMachine Learning\nCloud Computing\nDocker\nAWS\n\n\nName\n\n\n\n\n\n\n\n\n\n\nTracy\n3\n4\n2\n2\n0\n0\n\n\nRyan\n4\n5\n3\n2\n0\n0"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Ryan Martin and Tracy Anyasi",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html",
