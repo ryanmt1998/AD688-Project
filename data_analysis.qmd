@@ -45,86 +45,9 @@ The Unnecessary Columns:
 With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.
 
 
-```{python echo=false}
-import pandas as pd
-
-
-df = pd.read_csv('data/lightcast_job_postings.csv', low_memory=False)
-
-
-columns_to_drop = [
-  "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
-  "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
-  "SOC_2", "SOC_3", "SOC_5"
-]
-df.drop(columns=columns_to_drop, inplace=True)
-
-
-```
-
-
-
-
-
-```{python echo=false}
-#import missingno as msno
-#import matplotlib.pyplot as plt
-
-
-#msno.heatmap(df)
-#plt.title("Missing Values Heatmap")
-
-
-
-# Fill missing values for SALARY before dropping columns with many missing values
-#if "SALARY" in df.columns:
-# df["SALARY"] = df["SALARY"].fillna(df##["SALARY"].median())
-
-
-#df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
-```
-
-
-
-
-
-
-
-```{python echo=false}
-df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
-
-
-
-
-
-
-```
-
 
 ## Job Postings by Industry
 
-```{python echo=false}
-
-import plotly.express as px
-
-industry_counts = df["NAICS_2022_6_NAME"].value_counts().reset_index()
-industry_counts.columns = ["Industry", "Number of Job Postings"]
-
-top_industries = industry_counts.head(20)
-
-fig = px.bar(top_industries,
-            x="Industry",
-            y="Number of Job Postings",
-            title="Top 20 Job Postings by Industry",
-            width=900,
-            height=600)
-
-fig.update_xaxes(tickangle=45, tickmode='array')
-
-fig.write_html("figures/top_20_job_postings_by_industry.html")
-
-
-```
 
 
 ```{=html}
@@ -139,29 +62,7 @@ The bar chart depicts the job postings by industry, with a majority of postings 
 The remaining industries amount to a much smaller number of postings, which indicates their low representation. This lower hiring demand could be a result of disinterest in field from college graduates and skilled professionals or the lack of proper outreach about such industries to the general public. Either way, it is evident that the industries that deal with computer-based technology have higher volumes of job postings to meet the demand of companies and other businesses within their sector.
 
 ## Salary Distribution by Industry
-```{python echo=false}
 
-import plotly.express as px
-
-
-top_industries = df["NAICS_2022_6_NAME"].value_counts().head(20).index
-
-df_top = df[df["NAICS_2022_6_NAME"].isin(top_industries)]
-
-fig = px.box(df_top, x="NAICS_2022_6_NAME",      y="SALARY",
-            title="Salary Distribution by Industry",
-            labels={"NAICS_2022_6_NAME": "Industry", "SALARY": "Salary"},
-            width=900,
-            height=600)
-
-fig.update_xaxes(tickangle=45)
-
-fig.write_html("figures/Salary_Distribution_by_Industry.html")
-
-
-
-
-```
 
 
 ```{=html}
@@ -177,17 +78,6 @@ Overall, this distribution highlights how industry choice can also affect earnin
 
 
 ## Remote vs. On-Site Jobs
-```{python echo=false}
-import plotly.express as px
-fig = px.pie(df, names="REMOTE_TYPE_NAME", title="Remote vs. On-Site Jobs")
-
-
-
-fig.write_html("figures/remote_vs_On_site.html")
-
-
-
-```
 
 
 ```{=html}

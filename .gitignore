@@ -5,3 +5,4 @@
 .pypirc
 lightcast_job_postings.csv
 spark-warehouse/
+data/lightcast_job_postings.csv
