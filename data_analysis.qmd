@@ -49,7 +49,7 @@ With the removal of older NAICS and SOC codes, our dataset now retains only the 
 import pandas as pd
 
 
-df = pd.read_csv('data/lightcast_job_postings.csv', low_memory=False)
+#df = pd.read_csv('data/lightcast_job_postings.csv', low_memory=False)
 
 
 columns_to_drop = [
