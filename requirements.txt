@@ -18,3 +18,4 @@ tzdata==2025.2
 missingno
 pyspark
 kaleido==1.1.0
+scikit-learn

@@ -1,4 +1,4 @@
-#!/home/ubuntu/AD688-Project/venv/bin/python3
+#!/home/ubuntu/AD688-Project-2/venv/bin/python3
 import sys
 from jupyter_client.runapp import RunApp
 if __name__ == '__main__':

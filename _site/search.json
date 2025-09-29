@@ -152,5 +152,19 @@
     "title": "Team Members’ Skill Proficiency Levels",
     "section": "Comparing Team Skills to Industry Requirements",
     "text": "Comparing Team Skills to Industry Requirements\nWorking in the IT department requires a diverse set of skills that Ryan and Tracy will need to to develop to meet industry standards. The top skills in this line of work include experience with python, SQL, Machine Learning, Cloud Computing, R, Docker, and AWS. While Ryan has solid experience with Python, SQL, and R, Tracy has only limited experience with Python. Both need to improve their proficiency in Machine Learning, Cloud Computing, and AWS while familiarizing themselves with Docker, where they currently have no experience."
+  },
+  {
+    "objectID": "ai_vs_traditional.html",
+    "href": "ai_vs_traditional.html",
+    "title": "AI vs Traditional Careers",
+    "section": "",
+    "text": "from pyspark.sql import SparkSession\nimport pandas as pd\nfrom pyspark.sql import functions as F\nfrom pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler\nfrom pyspark.ml.clustering import KMeans\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\n\n\n# Initialize Spark Session\nspark = SparkSession.builder.appName(\"./data/LightcastData\").getOrCreate()\n\ndf = spark.read.option(\"header\", \"true\") \\\n            .option(\"inferSchema\", \"true\") \\\n            .option(\"multiLine\", \"true\") \\\n            .option(\"escape\", \"\\\"\") \\\n            .csv(\"./data/lightcast_job_postings.csv\")\n\nWARNING: Using incubator modules: jdk.incubator.vector\nUsing Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties\nSetting default log level to \"WARN\".\nTo adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).\n25/09/29 18:16:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable\n[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]"
+  },
+  {
+    "objectID": "ai_vs_traditional.html#k-mean-clustering",
+    "href": "ai_vs_traditional.html#k-mean-clustering",
+    "title": "AI vs Traditional Careers",
+    "section": "",
+    "text": "from pyspark.sql import SparkSession\nimport pandas as pd\nfrom pyspark.sql import functions as F\nfrom pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler\nfrom pyspark.ml.clustering import KMeans\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\n\n\n# Initialize Spark Session\nspark = SparkSession.builder.appName(\"./data/LightcastData\").getOrCreate()\n\ndf = spark.read.option(\"header\", \"true\") \\\n            .option(\"inferSchema\", \"true\") \\\n            .option(\"multiLine\", \"true\") \\\n            .option(\"escape\", \"\\\"\") \\\n            .csv(\"./data/lightcast_job_postings.csv\")\n\nWARNING: Using incubator modules: jdk.incubator.vector\nUsing Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties\nSetting default log level to \"WARN\".\nTo adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).\n25/09/29 18:16:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable\n[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]"
   }
 ]

@@ -1,8 +1,82 @@
+---
+title: "AI vs Traditional Careers"
+format: html
+jupyter:
+    kernel: venv
+---
 
 
 
 
 
+## K-Mean Clustering
+
+```{python}
+from pyspark.sql import SparkSession
+import pandas as pd
+from pyspark.sql import functions as F
+from pyspark.sql.types import StringType
+from pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler
+from pyspark.ml.clustering import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+
+```{python}
+# Initialize Spark Session
+spark = SparkSession.builder.appName("./data/LightcastData").getOrCreate()
+
+df = spark.read.option("header", "true") \
+            .option("inferSchema", "true") \
+            .option("multiLine", "true") \
+            .option("escape", "\"") \
+            .csv("./data/lightcast_job_postings.csv")
+```
+
+```{python}
+def label_ai_roles(title):
+    ai_keyword = ["AI", "artificial intelligence", "machine learning", "data scientist", "deep learning"]
+    title_lower = str(title).lower() if title else ''
+    return "AI" if any(keyword in title_lower for keyword in ai_keywords) else "Non-AI"
+
+label_ai_udf = F.udf(label_ai_roles, StringType())
+```
+
+
+```{python}
+df.printSchema()
+
+
+```
+```{python}
+df = df.withColumn('ai_label', label_ai_udf("TITLE_RAW"))
+
+df = df.select("TITLE_RAW", "SALARY", "LIGHTCAST_SECTORS", "NAICS_2022_6", "ai_label")
+
+
+
+
+```
+
+```{python}
+indexers = [
+    StringIndexer(inputCol="TITLE_RAW", outputCol="job_title_enc", handleInvalid="keep"),
+    StringIndexer(inputCol="LIGHTCAST_SECTORS", outputCol="industry_enc", handleInvalid="keep"),
+    StringIndexer(inputCol="NAICS_2022_6", outputCol="naics_enc", handleInvalid="keep"),
+    StringIndexer(inputCol="ai_label", outputCol="ai_enc", handleInvalid="keep")
+]
+
+```
+
+```{python}
+
+
+
+
+
+
+```
 
 
 
