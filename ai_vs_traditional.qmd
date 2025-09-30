@@ -2,7 +2,7 @@
 title: "Your Title"
 format: html
 execute:
-    kernel: venv
+    kernel: python3
 ---
 
 
