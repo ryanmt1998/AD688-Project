@@ -20,7 +20,7 @@ format:
     number-sections: true
     df-print: paged
 jupyter: 
-  kernel: .venv
+  kernel: python3
 ---
 
 ## Dropping Unnecessary Columns
