@@ -37,11 +37,15 @@ df = spark.read.option("header", "true") \
 
 ```{python}
 def label_ai_roles(title):
-    ai_keyword = ["AI", "artificial intelligence", "machine learning", "data scientist", "deep learning"]
+    ai_keywords = ["AI", "artificial intelligence", "machine learning", 
+                "data scientist", "deep learning"]
     title_lower = str(title).lower() if title else ''
-    return "AI" if any(keyword in title_lower for keyword in ai_keyword) else "Non-AI"
+    return "AI" if any(keyword in title_lower for keyword in ai_keywords) else "Non-AI"
+
 
 label_ai_udf = F.udf(label_ai_roles, StringType())
+
+df = df.withColumn('ai_label', label_ai_udf("TITLE_RAW"))
 ```
 
 ```{python}
@@ -49,8 +53,6 @@ df.printSchema()
 ```
 
 ```{python}
-
-df = df.withColumn('ai_label', label_ai_udf("TITLE_RAW"))
 
 df = df.select("TITLE_RAW", "SALARY", "LIGHTCAST_SECTORS", "NAICS_2022_6", "ai_label")
 
@@ -64,14 +66,15 @@ indexers = [
     StringIndexer(inputCol="NAICS_2022_6", outputCol="naics_enc", handleInvalid="keep"),
     StringIndexer(inputCol="ai_label", outputCol="ai_enc", handleInvalid="keep")
 ]
-```
-
-
-```{python}
 
 pipeline = Pipeline(stages=indexers)
 df_indexed = pipeline.fit(df).transform(df)
+
+print("Categorical variables encoded to numbers")
+
 ```
+
+
 
 ```{python}
 
@@ -81,54 +84,149 @@ df_indexed_clean = df_indexed.na.drop(subset=["job_title_enc", "SALARY", "indust
 
 
 ```{python}
-assembler_selected = VectorAssembler(
-    inputCols=["job_title_enc", "industry_enc", "SALARY"],
+assembler = VectorAssembler(
+    inputCols=["job_title_enc", "industry_enc", "SALARY", "naics_enc"],
     outputCol="features"
 )
-df_features_selected = assembler_selected.transform(df_indexed_clean)
+df_features = assembler.transform(df_indexed_clean)
 ```
 
 ```{python}
 scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
-scaler_model = scaler.fit(df_features_selected)
-df_scaled_selected = scaler_model.transform(df_features_selected)
+scaler_model = scaler.fit(df_features)
+df_scaled = scaler_model.transform(df_features)
 
 ```
 
 ```{python}
-kmeans_selected = KMeans(featuresCol="scaled_features", predictionCol="cluster", k=3, seed=42)
-model_selected = kmeans_selected.fit(df_scaled_selected)
-df_clustered_selected = model_selected.transform(df_scaled_selected)
+kmeans = KMeans(featuresCol="scaled_features", predictionCol="cluster", k=3, seed=42)
+model = kmeans.fit(df_scaled)
+df_clustered = model.transform(df_scaled)
+
+
+
 ```
 
 ```{python}
-cluster_ai_counts = df_clustered_selected.groupBy("cluster", "ai_label").count().toPandas()
-print(cluster_ai_counts)
+df_clean = df_clustered.select("cluster", "SALARY", "ai_label", "TITLE_RAW", "LIGHTCAST_SECTORS")
 ```
 
 
 
 ```{python}
-clustered_pd = df_clustered_selected.select("cluster", "SALARY", "ai_label", "TITLE_RAW").toPandas()
+##Salary Comparison
+print("\n" + "="*80)
+print("1. SALARY COMPARISON")
+print("="*80)
 
-df_clean = clustered_pd
+salary_comparison = df_clean.groupBy("ai_label").agg(
+    F.mean("SALARY").alias("mean"),
+    F.expr("percentile_approx(SALARY, 0.5)").alias("median"),
+    F.stddev("SALARY").alias("std"),
+    F.count("SALARY").alias("count")
+)
+
+salary_comparison.show()
+
+
+ai_salary = salary_comparison.filter(F.col("ai_label") == "AI").select("mean").collect()[0][0]
+non_ai_salary = salary_comparison.filter(F.col("ai_label") == "Non-AI").select("mean").collect()[0][0]
+salary_diff = ai_salary - non_ai_salary
+
+print("\nAI roles pay $" + str(round(salary_diff, 2)) + " more on average")
 ```
 
 ```{python}
-top_titles = df_clean['TITLE_RAW'].value_counts().head(10).index
-df_plot = df_clean[df_clean['TITLE_RAW'].isin(top_titles)]
+##Job Title Comparison
+print("\n" + "="*80)
+print("2. TOP JOB TITLES")
+print("="*80)
+
+print("\nTop 10 Non-AI Job Titles:")
+(df_clean.filter(F.col("ai_label") == "Non-AI")
+    .groupBy("TITLE_RAW")
+    .count()
+    .orderBy(F.desc("count"))
+    .show(10, truncate=False))
+
+print("\nTop 10 AI Job Titles:")
+(df_clean.filter(F.col("ai_label") == "AI")
+    .groupBy("TITLE_RAW")
+    .count()
+    .orderBy(F.desc("count"))
+    .show(10, truncate=False))
+```
+
+```{python}
+##Cluster Distribution
+print("\n" + "="*80)
+print("3. CLUSTER DISTRIBUTION BY AI LABEL")
+print("="*80)
+
+cluster_dist = (df_clean.groupBy("cluster", "ai_label")
+        .count()
+        .orderBy("cluster", "ai_label")
+)
+cluster_dist.show()
 
 
-plt.figure(figsize=(16, 8))
-sns.scatterplot(x='TITLE_RAW', y='SALARY', hue='cluster',
-                style='ai_label', data=df_plot,
-                palette='tab10', s=120, alpha=0.7)
-plt.xticks(rotation=45, ha='right', fontsize=10)
-plt.title('Job Title vs Salary by Cluster (AI vs Non-AI)', fontsize=16, fontweight='bold')
-plt.xlabel('Job Title', fontsize=12)
-plt.ylabel('Salary ($)', fontsize=12)
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
-plt.tight_layout()
-plt.show()
+
+```
+
+```{python}
+##Industry Comparison
+print("\n" + "="*80)
+print("4. Industry Comparison")
+print("="*80)
+
+print("\nTop 10 Non-AI Industries:")
+(df_clean.filter(F.col("ai_label") == "Non-AI")
+        .groupBy("LIGHTCAST_SECTORS")
+        .count()
+        .orderBy(F.desc("count"))
+        .show(10, truncate = False)
+)
+
+print("\nTop 10 AI Industries:")
+(df_clean.filter(F.col("ai_label") == "AI")
+        .groupBy("LIGHTCAST_SECTORS")
+        .count()
+        .orderBy(F.desc("count"))
+        .show(10, truncate = False)
+)
+```
+
+```{python}
+##Salary by Industry
+print("\n" + "="*80)
+print("5. AVERAGE SALARY BY INDUSTRY (Top 10)")
+print("="*80)
+
+print("\nNon-AI Roles - Top 10 Industries by Average Salary:")
+(df_clean.filter(F.col("ai_label")=="Non-AI")
+        .groupBy("LIGHTCAST_SECTORS")
+        .agg(F.mean("SALARY").alias("avg_salary"), F.count("SALARY").alias("job_count") )
+        .filter(F.col("job_count")>=10)
+        .orderBy(F.desc("avg_salary"))
+        .show(10,truncate=False)   
+)
+
+print("\nAI Roles - Top 10 Industries by Average Salary:")
+(df_clean.filter(F.col("ai_label")=="AI")
+        .groupBy("LIGHTCAST_SECTORS")
+        .agg(F.mean("SALARY").alias("avg_salary"), F.count("SALARY").alias("job_count") )
+        .filter(F.col("job_count")>=10)
+        .orderBy(F.desc("avg_salary"))
+        .show(10,truncate=False)   
+)
+
+
+```
+
+```{python}
+df_pandas=df_clean.toPandas()
+
+
+
 
 ```
