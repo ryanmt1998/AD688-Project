@@ -19,10 +19,10 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import StringType
 from pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler
 from pyspark.ml.clustering import KMeans
+from pyspark.ml import Pipeline
 import matplotlib.pyplot as plt
 import seaborn as sns
 ```
-
 
 ```{python}
 # Initialize Spark Session
@@ -39,23 +39,20 @@ df = spark.read.option("header", "true") \
 def label_ai_roles(title):
     ai_keyword = ["AI", "artificial intelligence", "machine learning", "data scientist", "deep learning"]
     title_lower = str(title).lower() if title else ''
-    return "AI" if any(keyword in title_lower for keyword in ai_keywords) else "Non-AI"
+    return "AI" if any(keyword in title_lower for keyword in ai_keyword) else "Non-AI"
 
 label_ai_udf = F.udf(label_ai_roles, StringType())
 ```
 
-
 ```{python}
 df.printSchema()
-
-
 ```
+
 ```{python}
+
 df = df.withColumn('ai_label', label_ai_udf("TITLE_RAW"))
 
 df = df.select("TITLE_RAW", "SALARY", "LIGHTCAST_SECTORS", "NAICS_2022_6", "ai_label")
-
-
 
 
 ```
@@ -67,18 +64,71 @@ indexers = [
     StringIndexer(inputCol="NAICS_2022_6", outputCol="naics_enc", handleInvalid="keep"),
     StringIndexer(inputCol="ai_label", outputCol="ai_enc", handleInvalid="keep")
 ]
+```
 
+
+```{python}
+
+pipeline = Pipeline(stages=indexers)
+df_indexed = pipeline.fit(df).transform(df)
 ```
 
 ```{python}
 
-
-
-
-
+df_indexed_clean = df_indexed.na.drop(subset=["job_title_enc", "SALARY", "industry_enc", "naics_enc"])
 
 ```
 
 
+```{python}
+assembler_selected = VectorAssembler(
+    inputCols=["job_title_enc", "industry_enc", "SALARY"],
+    outputCol="features"
+)
+df_features_selected = assembler_selected.transform(df_indexed_clean)
+```
+
+```{python}
+scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
+scaler_model = scaler.fit(df_features_selected)
+df_scaled_selected = scaler_model.transform(df_features_selected)
+
+```
+
+```{python}
+kmeans_selected = KMeans(featuresCol="scaled_features", predictionCol="cluster", k=3, seed=42)
+model_selected = kmeans_selected.fit(df_scaled_selected)
+df_clustered_selected = model_selected.transform(df_scaled_selected)
+```
+
+```{python}
+cluster_ai_counts = df_clustered_selected.groupBy("cluster", "ai_label").count().toPandas()
+print(cluster_ai_counts)
+```
 
 
+
+```{python}
+clustered_pd = df_clustered_selected.select("cluster", "SALARY", "ai_label", "TITLE_RAW").toPandas()
+
+df_clean = clustered_pd
+```
+
+```{python}
+top_titles = df_clean['TITLE_RAW'].value_counts().head(10).index
+df_plot = df_clean[df_clean['TITLE_RAW'].isin(top_titles)]
+
+
+plt.figure(figsize=(16, 8))
+sns.scatterplot(x='TITLE_RAW', y='SALARY', hue='cluster',
+                style='ai_label', data=df_plot,
+                palette='tab10', s=120, alpha=0.7)
+plt.xticks(rotation=45, ha='right', fontsize=10)
+plt.title('Job Title vs Salary by Cluster (AI vs Non-AI)', fontsize=16, fontweight='bold')
+plt.xlabel('Job Title', fontsize=12)
+plt.ylabel('Salary ($)', fontsize=12)
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=10)
+plt.tight_layout()
+plt.show()
+
+```

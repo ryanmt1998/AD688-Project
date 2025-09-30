@@ -190,8 +190,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> StringType</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, VectorAssembler, StandardScaler</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.clustering <span class="im">import</span> KMeans</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize Spark Session</span></span>
@@ -207,7 +208,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/30 15:52:18 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+25/09/30 19:05:19 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+25/09/30 19:05:21 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
 [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
@@ -215,7 +217,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> label_ai_roles(title):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ai_keyword <span class="op">=</span> [<span class="st">"AI"</span>, <span class="st">"artificial intelligence"</span>, <span class="st">"machine learning"</span>, <span class="st">"data scientist"</span>, <span class="st">"deep learning"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    title_lower <span class="op">=</span> <span class="bu">str</span>(title).lower() <span class="cf">if</span> title <span class="cf">else</span> <span class="st">''</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"AI"</span> <span class="cf">if</span> <span class="bu">any</span>(keyword <span class="kw">in</span> title_lower <span class="cf">for</span> keyword <span class="kw">in</span> ai_keywords) <span class="cf">else</span> <span class="st">"Non-AI"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"AI"</span> <span class="cf">if</span> <span class="bu">any</span>(keyword <span class="kw">in</span> title_lower <span class="cf">for</span> keyword <span class="kw">in</span> ai_keyword) <span class="cf">else</span> <span class="st">"Non-AI"</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>label_ai_udf <span class="op">=</span> F.udf(label_ai_roles, StringType())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -369,6 +371,114 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"NAICS_2022_6"</span>, outputCol<span class="op">=</span><span class="st">"naics_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>),</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"ai_label"</span>, outputCol<span class="op">=</span><span class="st">"ai_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline(stages<span class="op">=</span>indexers)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_indexed <span class="op">=</span> pipeline.fit(df).transform(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 2:&gt;                                                          (0 + 1) / 1][Stage 4:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 8:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 14:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 20:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_indexed_clean <span class="op">=</span> df_indexed.na.drop(subset<span class="op">=</span>[<span class="st">"job_title_enc"</span>, <span class="st">"SALARY"</span>, <span class="st">"industry_enc"</span>, <span class="st">"naics_enc"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>assembler_selected <span class="op">=</span> VectorAssembler(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    inputCols<span class="op">=</span>[<span class="st">"job_title_enc"</span>, <span class="st">"industry_enc"</span>, <span class="st">"SALARY"</span>],</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    outputCol<span class="op">=</span><span class="st">"features"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df_features_selected <span class="op">=</span> assembler_selected.transform(df_indexed_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler(inputCol<span class="op">=</span><span class="st">"features"</span>, outputCol<span class="op">=</span><span class="st">"scaled_features"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>scaler_model <span class="op">=</span> scaler.fit(df_features_selected)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df_scaled_selected <span class="op">=</span> scaler_model.transform(df_features_selected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>25/09/30 19:06:13 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+[Stage 26:&gt;                                                         (0 + 1) / 1]25/09/30 19:06:20 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+                                                                                </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>kmeans_selected <span class="op">=</span> KMeans(featuresCol<span class="op">=</span><span class="st">"scaled_features"</span>, predictionCol<span class="op">=</span><span class="st">"cluster"</span>, k<span class="op">=</span><span class="dv">3</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model_selected <span class="op">=</span> kmeans_selected.fit(df_scaled_selected)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df_clustered_selected <span class="op">=</span> model_selected.transform(df_scaled_selected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>25/09/30 19:06:21 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+[Stage 29:&gt;                                                         (0 + 1) / 1]25/09/30 19:06:29 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+                                                                                25/09/30 19:06:29 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+[Stage 32:&gt;                                                         (0 + 1) / 1]                                                                                25/09/30 19:06:42 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:42 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:43 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:43 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:43 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:44 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:44 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:44 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:45 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:45 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:45 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:45 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:45 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:46 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:47 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:47 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+25/09/30 19:06:47 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+[Stage 70:&gt;                                                         (0 + 1) / 1]25/09/30 19:06:55 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+                                                                                </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cluster_ai_counts <span class="op">=</span> df_clustered_selected.groupBy(<span class="st">"cluster"</span>, <span class="st">"ai_label"</span>).count().toPandas()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cluster_ai_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>25/09/30 19:06:55 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+[Stage 73:&gt;                                                         (0 + 1) / 1]25/09/30 19:07:03 WARN DAGScheduler: Broadcasting large task binary with size 2.1 MiB
+                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   cluster ai_label  count
+0        1   Non-AI  18021
+1        2   Non-AI   7211
+2        2       AI     43
+3        1       AI      7
+4        0   Non-AI   5513
+5        0       AI     13</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>clustered_pd <span class="op">=</span> df_clustered_selected.select(<span class="st">"cluster"</span>, <span class="st">"SALARY"</span>, <span class="st">"ai_label"</span>, <span class="st">"TITLE_RAW"</span>).toPandas()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> clustered_pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>25/09/30 19:07:04 WARN DAGScheduler: Broadcasting large task binary with size 2017.8 KiB
+[Stage 76:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>top_titles <span class="op">=</span> df_clean[<span class="st">'TITLE_RAW'</span>].value_counts().head(<span class="dv">10</span>).index</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df_plot <span class="op">=</span> df_clean[df_clean[<span class="st">'TITLE_RAW'</span>].isin(top_titles)]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">8</span>))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span><span class="st">'TITLE_RAW'</span>, y<span class="op">=</span><span class="st">'SALARY'</span>, hue<span class="op">=</span><span class="st">'cluster'</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                style<span class="op">=</span><span class="st">'ai_label'</span>, data<span class="op">=</span>df_plot,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                palette<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">120</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">'right'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Job Title vs Salary by Cluster (AI vs Non-AI)'</span>, fontsize<span class="op">=</span><span class="dv">16</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Job Title'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Salary ($)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>plt.legend(bbox_to_anchor<span class="op">=</span>(<span class="fl">1.05</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">'upper left'</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="ai_vs_traditional_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
 </div>
 
 
