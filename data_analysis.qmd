@@ -19,6 +19,8 @@ format:
     toc: true
     number-sections: true
     df-print: paged
+jupyter: 
+  kernel: venv
 ---
 
 ## Dropping Unnecessary Columns

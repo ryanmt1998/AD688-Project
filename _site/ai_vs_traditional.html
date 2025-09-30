@@ -187,11 +187,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> functions <span class="im">as</span> F</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, VectorAssembler, StandardScaler</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.clustering <span class="im">import</span> KMeans</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> StringType</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, VectorAssembler, StandardScaler</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.clustering <span class="im">import</span> KMeans</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize Spark Session</span></span>
@@ -207,9 +207,168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/09/29 18:16:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
+25/09/30 15:30:33 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> label_ai_roles(title):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ai_keyword <span class="op">=</span> [<span class="st">"AI"</span>, <span class="st">"artificial intelligence"</span>, <span class="st">"machine learning"</span>, <span class="st">"data scientist"</span>, <span class="st">"deep learning"</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    title_lower <span class="op">=</span> <span class="bu">str</span>(title).lower() <span class="cf">if</span> title <span class="cf">else</span> <span class="st">''</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"AI"</span> <span class="cf">if</span> <span class="bu">any</span>(keyword <span class="kw">in</span> title_lower <span class="cf">for</span> keyword <span class="kw">in</span> ai_keywords) <span class="cf">else</span> <span class="st">"Non-AI"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>label_ai_udf <span class="op">=</span> F.udf(label_ai_roles, StringType())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.printSchema()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>root
+ |-- ID: string (nullable = true)
+ |-- LAST_UPDATED_DATE: string (nullable = true)
+ |-- LAST_UPDATED_TIMESTAMP: timestamp (nullable = true)
+ |-- DUPLICATES: integer (nullable = true)
+ |-- POSTED: string (nullable = true)
+ |-- EXPIRED: string (nullable = true)
+ |-- DURATION: integer (nullable = true)
+ |-- SOURCE_TYPES: string (nullable = true)
+ |-- SOURCES: string (nullable = true)
+ |-- URL: string (nullable = true)
+ |-- ACTIVE_URLS: string (nullable = true)
+ |-- ACTIVE_SOURCES_INFO: string (nullable = true)
+ |-- TITLE_RAW: string (nullable = true)
+ |-- BODY: string (nullable = true)
+ |-- MODELED_EXPIRED: string (nullable = true)
+ |-- MODELED_DURATION: integer (nullable = true)
+ |-- COMPANY: integer (nullable = true)
+ |-- COMPANY_NAME: string (nullable = true)
+ |-- COMPANY_RAW: string (nullable = true)
+ |-- COMPANY_IS_STAFFING: boolean (nullable = true)
+ |-- EDUCATION_LEVELS: string (nullable = true)
+ |-- EDUCATION_LEVELS_NAME: string (nullable = true)
+ |-- MIN_EDULEVELS: integer (nullable = true)
+ |-- MIN_EDULEVELS_NAME: string (nullable = true)
+ |-- MAX_EDULEVELS: integer (nullable = true)
+ |-- MAX_EDULEVELS_NAME: string (nullable = true)
+ |-- EMPLOYMENT_TYPE: integer (nullable = true)
+ |-- EMPLOYMENT_TYPE_NAME: string (nullable = true)
+ |-- MIN_YEARS_EXPERIENCE: integer (nullable = true)
+ |-- MAX_YEARS_EXPERIENCE: integer (nullable = true)
+ |-- IS_INTERNSHIP: boolean (nullable = true)
+ |-- SALARY: integer (nullable = true)
+ |-- REMOTE_TYPE: integer (nullable = true)
+ |-- REMOTE_TYPE_NAME: string (nullable = true)
+ |-- ORIGINAL_PAY_PERIOD: string (nullable = true)
+ |-- SALARY_TO: integer (nullable = true)
+ |-- SALARY_FROM: integer (nullable = true)
+ |-- LOCATION: string (nullable = true)
+ |-- CITY: string (nullable = true)
+ |-- CITY_NAME: string (nullable = true)
+ |-- COUNTY: integer (nullable = true)
+ |-- COUNTY_NAME: string (nullable = true)
+ |-- MSA: integer (nullable = true)
+ |-- MSA_NAME: string (nullable = true)
+ |-- STATE: integer (nullable = true)
+ |-- STATE_NAME: string (nullable = true)
+ |-- COUNTY_OUTGOING: integer (nullable = true)
+ |-- COUNTY_NAME_OUTGOING: string (nullable = true)
+ |-- COUNTY_INCOMING: integer (nullable = true)
+ |-- COUNTY_NAME_INCOMING: string (nullable = true)
+ |-- MSA_OUTGOING: integer (nullable = true)
+ |-- MSA_NAME_OUTGOING: string (nullable = true)
+ |-- MSA_INCOMING: integer (nullable = true)
+ |-- MSA_NAME_INCOMING: string (nullable = true)
+ |-- NAICS2: integer (nullable = true)
+ |-- NAICS2_NAME: string (nullable = true)
+ |-- NAICS3: integer (nullable = true)
+ |-- NAICS3_NAME: string (nullable = true)
+ |-- NAICS4: integer (nullable = true)
+ |-- NAICS4_NAME: string (nullable = true)
+ |-- NAICS5: integer (nullable = true)
+ |-- NAICS5_NAME: string (nullable = true)
+ |-- NAICS6: integer (nullable = true)
+ |-- NAICS6_NAME: string (nullable = true)
+ |-- TITLE: string (nullable = true)
+ |-- TITLE_NAME: string (nullable = true)
+ |-- TITLE_CLEAN: string (nullable = true)
+ |-- SKILLS: string (nullable = true)
+ |-- SKILLS_NAME: string (nullable = true)
+ |-- SPECIALIZED_SKILLS: string (nullable = true)
+ |-- SPECIALIZED_SKILLS_NAME: string (nullable = true)
+ |-- CERTIFICATIONS: string (nullable = true)
+ |-- CERTIFICATIONS_NAME: string (nullable = true)
+ |-- COMMON_SKILLS: string (nullable = true)
+ |-- COMMON_SKILLS_NAME: string (nullable = true)
+ |-- SOFTWARE_SKILLS: string (nullable = true)
+ |-- SOFTWARE_SKILLS_NAME: string (nullable = true)
+ |-- ONET: string (nullable = true)
+ |-- ONET_NAME: string (nullable = true)
+ |-- ONET_2019: string (nullable = true)
+ |-- ONET_2019_NAME: string (nullable = true)
+ |-- CIP6: string (nullable = true)
+ |-- CIP6_NAME: string (nullable = true)
+ |-- CIP4: string (nullable = true)
+ |-- CIP4_NAME: string (nullable = true)
+ |-- CIP2: string (nullable = true)
+ |-- CIP2_NAME: string (nullable = true)
+ |-- SOC_2021_2: string (nullable = true)
+ |-- SOC_2021_2_NAME: string (nullable = true)
+ |-- SOC_2021_3: string (nullable = true)
+ |-- SOC_2021_3_NAME: string (nullable = true)
+ |-- SOC_2021_4: string (nullable = true)
+ |-- SOC_2021_4_NAME: string (nullable = true)
+ |-- SOC_2021_5: string (nullable = true)
+ |-- SOC_2021_5_NAME: string (nullable = true)
+ |-- LOT_CAREER_AREA: integer (nullable = true)
+ |-- LOT_CAREER_AREA_NAME: string (nullable = true)
+ |-- LOT_OCCUPATION: integer (nullable = true)
+ |-- LOT_OCCUPATION_NAME: string (nullable = true)
+ |-- LOT_SPECIALIZED_OCCUPATION: integer (nullable = true)
+ |-- LOT_SPECIALIZED_OCCUPATION_NAME: string (nullable = true)
+ |-- LOT_OCCUPATION_GROUP: integer (nullable = true)
+ |-- LOT_OCCUPATION_GROUP_NAME: string (nullable = true)
+ |-- LOT_V6_SPECIALIZED_OCCUPATION: integer (nullable = true)
+ |-- LOT_V6_SPECIALIZED_OCCUPATION_NAME: string (nullable = true)
+ |-- LOT_V6_OCCUPATION: integer (nullable = true)
+ |-- LOT_V6_OCCUPATION_NAME: string (nullable = true)
+ |-- LOT_V6_OCCUPATION_GROUP: integer (nullable = true)
+ |-- LOT_V6_OCCUPATION_GROUP_NAME: string (nullable = true)
+ |-- LOT_V6_CAREER_AREA: integer (nullable = true)
+ |-- LOT_V6_CAREER_AREA_NAME: string (nullable = true)
+ |-- SOC_2: string (nullable = true)
+ |-- SOC_2_NAME: string (nullable = true)
+ |-- SOC_3: string (nullable = true)
+ |-- SOC_3_NAME: string (nullable = true)
+ |-- SOC_4: string (nullable = true)
+ |-- SOC_4_NAME: string (nullable = true)
+ |-- SOC_5: string (nullable = true)
+ |-- SOC_5_NAME: string (nullable = true)
+ |-- LIGHTCAST_SECTORS: string (nullable = true)
+ |-- LIGHTCAST_SECTORS_NAME: string (nullable = true)
+ |-- NAICS_2022_2: integer (nullable = true)
+ |-- NAICS_2022_2_NAME: string (nullable = true)
+ |-- NAICS_2022_3: integer (nullable = true)
+ |-- NAICS_2022_3_NAME: string (nullable = true)
+ |-- NAICS_2022_4: integer (nullable = true)
+ |-- NAICS_2022_4_NAME: string (nullable = true)
+ |-- NAICS_2022_5: integer (nullable = true)
+ |-- NAICS_2022_5_NAME: string (nullable = true)
+ |-- NAICS_2022_6: integer (nullable = true)
+ |-- NAICS_2022_6_NAME: string (nullable = true)
+</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">'ai_label'</span>, label_ai_udf(<span class="st">"TITLE_RAW"</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.select(<span class="st">"TITLE_RAW"</span>, <span class="st">"SALARY"</span>, <span class="st">"LIGHTCAST_SECTORS"</span>, <span class="st">"NAICS_2022_6"</span>, <span class="st">"ai_label"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>indexers <span class="op">=</span> [</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"TITLE_RAW"</span>, outputCol<span class="op">=</span><span class="st">"job_title_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"LIGHTCAST_SECTORS"</span>, outputCol<span class="op">=</span><span class="st">"industry_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"NAICS_2022_6"</span>, outputCol<span class="op">=</span><span class="st">"naics_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    StringIndexer(inputCol<span class="op">=</span><span class="st">"ai_label"</span>, outputCol<span class="op">=</span><span class="st">"ai_enc"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
