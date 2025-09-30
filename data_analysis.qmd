@@ -108,7 +108,26 @@ The bar chart depicts the job postings by industry, with a majority of postings 
 The remaining industries amount to a much smaller number of postings, which indicates their low representation. This lower hiring demand could be a result of disinterest in field from college graduates and skilled professionals or the lack of proper outreach about such industries to the general public. Either way, it is evident that the industries that deal with computer-based technology have higher volumes of job postings to meet the demand of companies and other businesses within their sector.
 
 ## Salary Distribution by Industry
+```{python echo=false}
+import plotly.express as px
 
+top_industries = df["NAICS_2022_6_NAME"].value_counts().head(20).index
+
+df_top = df[df["NAICS_2022_6_NAME"].isin(top_industries)]
+
+fig = px.box(df_top, x="NAICS_2022_6_NAME",      y="SALARY",
+
+           title="Salary Distribution by Industry",
+
+           labels={"NAICS_2022_6_NAME": "Industry", "SALARY": "Salary"},
+
+           width=900,
+
+           height=600)
+
+fig.update_xaxes(tickangle=45)
+fig.write_html("figures/Salary_Distribution_by_Industry.html")
+```
 
 
 ```{=html}
