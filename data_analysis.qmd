@@ -44,6 +44,26 @@ The Unnecessary Columns:
 
 With the removal of older NAICS and SOC codes, our dataset now retains only the most current classification columns: NAICS_2022_6 for industry and SOC_2021_4 for occupation. This streamlines our analysis by focusing on up-to-date standards, reducing redundancy, and ensuring consistency in categorizing job postings.
 
+```{python}
+
+import pandas as pd
+
+df = pd.read_csv('data/lightcast_job_postings.csv', low_memory=False)
+
+columns_to_drop = [
+
+ "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
+
+ "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
+
+ "SOC_2", "SOC_3", "SOC_5"
+
+]
+
+df.drop(columns=columns_to_drop, inplace=True)
+
+```
+
 
 
 ## Job Postings by Industry
