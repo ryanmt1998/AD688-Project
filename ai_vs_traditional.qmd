@@ -1,9 +1,10 @@
 ---
-title: "AI vs Traditional Careers"
+title: "Your Title"
 format: html
-jupyter:
+execute:
     kernel: venv
 ---
+
 
 
 
