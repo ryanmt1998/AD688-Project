@@ -143,6 +143,14 @@ Overall, this distribution highlights how industry choice can also affect earnin
 
 
 ## Remote vs. On-Site Jobs
+```{python echo=false}
+
+import plotly.express as px
+
+fig = px.pie(df, names="REMOTE_TYPE_NAME", title="Remote vs. On-Site Jobs")
+fig.write_html("figures/remote_vs_On_site.html")
+```
+
 
 
 ```{=html}
