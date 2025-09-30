@@ -64,7 +64,10 @@ df.drop(columns=columns_to_drop, inplace=True)
 
 ```
 
+```{python echo=false}
 
+df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
+```
 
 ## Job Postings by Industry
 
