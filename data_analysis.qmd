@@ -70,7 +70,30 @@ df = df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep=
 ```
 
 ## Job Postings by Industry
+```{python echo=false}
+import plotly.express as px
 
+industry_counts = df["NAICS_2022_6_NAME"].value_counts().reset_index()
+
+industry_counts.columns = ["Industry", "Number of Job Postings"]
+
+top_industries = industry_counts.head(20)
+
+fig = px.bar(top_industries,
+
+           x="Industry",
+
+           y="Number of Job Postings",
+
+           title="Top 20 Job Postings by Industry",
+
+           width=900,
+
+           height=600)
+
+fig.update_xaxes(tickangle=45, tickmode='array')
+fig.write_html("figures/top_20_job_postings_by_industry.html")
+```
 
 
 ```{=html}
