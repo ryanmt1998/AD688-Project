@@ -310,7 +310,26 @@ pn.panel(pn.GridBox(*plots, ncols=2)).show()
 
 ```
 
+```{python}
+import os
+from pyspark.sql import SparkSession
 
+spark = SparkSession.builder.appName("LightcastData").getOrCreate()
+
+# Get absolute path
+csv_path = os.path.abspath("./data/lightcast_job_postings.csv")
+print(csv_path)  # sanity check
+
+# Load CSV with absolute path
+df = spark.read.option("header", "true")\
+               .option("inferSchema", "true")\
+               .option("multiLine", "true")\
+               .option("escape", "\"")\
+               .csv(f"file://{csv_path}")
+
+#df.show(5)
+
+```
 
 ## Random Forest Regression
 ```{python}
