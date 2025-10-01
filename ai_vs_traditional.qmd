@@ -192,20 +192,47 @@ for x in cols:
         if x != y:
             plot = pdf.hvplot.scatter(
                 x=x, y=y, by='IS_AI_ROLE', width=450, height=250, alpha=0.6, title=f"{y} vs {x}"
-            )
-            plots.append(plot)
+            )            plots.append(plot)
 
 pn.GridBox(*plots, ncols=2)
 
 
 
 
+```
+
+```{python}
+
+
+
+```
+
+```{python}
+import os
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("LightcastData").getOrCreate()
+
+# Get absolute path
+csv_path = os.path.abspath("lightcast_job_postings.csv")
+print(csv_path)  # sanity check
+
+# Load CSV with absolute path
+df = spark.read.option("header", "true")\
+               .option("inferSchema", "true")\
+               .option("multiLine", "true")\
+               .option("escape", "\"")\
+               .csv(f"file://{csv_path}")
+
+df.show(5)
 
 ```
 
 ## Random Forest Regression
 
 ```{python}
+#```{python}
+(select ai vs non ai job)
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -279,3 +306,32 @@ Feature Importances:
 
 
 
+```
+
+
+## Random Forest Classification
+```{python}
+import pandas as pd
+
+# 1️⃣ Load your dataset
+df = pd.read_csv("lightcast_job_postings.csv", low_memory=False)
+
+# 2️⃣ Make sure SOC_5_NAME is a string
+df["TITLE_CLEAN"] = df["TITLE_CLEAN"].astype(str)
+
+# 3️⃣ Define AI-related keywords
+ai_keywords = [
+    "AI", "Artificial Intelligence", "Machine Learning", "Deep Learning",
+    "Neural", "Data Scientist", "Computer Vision", "NLP", "Natural Language",
+    "LLM", "Chatbot", "Generative", "Data Engineer", "Software", "Data"
+]
+
+# 4️⃣ Create AI_JOB column: 1 = AI job, 0 = Non-AI job
+df["AI_JOB"] = df["TITLE_CLEAN"].apply(
+    lambda x: 1 if any(keyword.lower() in x.lower() for keyword in ai_keywords) else 0
+)
+
+# 5️⃣ Check how many AI vs Non-AI jobs
+print(df["AI_JOB"].value_counts())
+```
+(select ai vs non ai job)
