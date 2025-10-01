@@ -390,3 +390,14 @@ print(importances)
 
 
 ```
+## Findings (will write paragraph next)
+R² Score: 0.3260268288195246
+RMSE: 53928.331046621715
+
+Feature Importances:
+                Feature  Importance
+2          NAICS_2022_6    0.534498
+0  MIN_YEARS_EXPERIENCE    0.259279
+3         MIN_EDULEVELS    0.093647
+4         MAX_EDULEVELS    0.057796
+1  MAX_YEARS_EXPERIENCE    0.054780
