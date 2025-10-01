@@ -306,32 +306,30 @@ Feature Importances:
 
 
 
-```
-
 
 ## Random Forest Classification
 ```{python}
 import pandas as pd
 
-# 1️⃣ Load your dataset
 df = pd.read_csv("lightcast_job_postings.csv", low_memory=False)
 
-# 2️⃣ Make sure SOC_5_NAME is a string
+#TITLE_CLEAN is a string
 df["TITLE_CLEAN"] = df["TITLE_CLEAN"].astype(str)
 
-# 3️⃣ Define AI-related keywords
+#defining AI-related keywords
 ai_keywords = [
     "AI", "Artificial Intelligence", "Machine Learning", "Deep Learning",
     "Neural", "Data Scientist", "Computer Vision", "NLP", "Natural Language",
     "LLM", "Chatbot", "Generative", "Data Engineer", "Software", "Data"
 ]
 
-# 4️⃣ Create AI_JOB column: 1 = AI job, 0 = Non-AI job
+#creatung AI_JOB column: 1 = AI job, 0 = Non-AI job
 df["AI_JOB"] = df["TITLE_CLEAN"].apply(
     lambda x: 1 if any(keyword.lower() in x.lower() for keyword in ai_keywords) else 0
 )
 
 # 5️⃣ Check how many AI vs Non-AI jobs
 print(df["AI_JOB"].value_counts())
+
+
 ```
-(select ai vs non ai job)
