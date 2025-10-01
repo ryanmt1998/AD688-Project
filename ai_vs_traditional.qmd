@@ -311,3 +311,73 @@ pn.panel(pn.GridBox(*plots, ncols=2)).show()
 ```
 
 
+
+## Random Forest Regression
+```{python}
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import r2_score, mean_squared_error
+
+# Load dataset
+df = pd.read_csv("data/lightcast_job_postings.csv", low_memory=False)
+
+# Load dataset
+df = pd.read_csv("data/lightcast_job_postings.csv", low_memory=False)
+
+# Select only numeric/categorical features for salary prediction
+features = [
+    "MIN_YEARS_EXPERIENCE",
+    "MAX_YEARS_EXPERIENCE",
+    "NAICS_2022_6",
+    "MIN_EDULEVELS",
+    "MAX_EDULEVELS"
+]
+
+# Convert features to numeric, coerce errors to NaN
+X = df[features].apply(pd.to_numeric, errors='coerce')
+
+# Drop or fill missing values
+X = X.fillna(0)
+
+# Target variable
+y = pd.to_numeric(df["SALARY"], errors='coerce').fillna(0)
+
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Initialize and train Random Forest
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model
+from sklearn.metrics import r2_score, mean_squared_error
+import numpy as np
+
+print("R² Score:", r2_score(y_test, y_pred))
+
+# Compute RMSE manually
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+print("RMSE:", rmse)
+
+
+# Evaluate model
+print("R² Score:", r2_score(y_test, y_pred))
+print("RMSE:", mean_squared_error(y_test, y_pred, squared=False))
+
+# Optional: feature importance
+importances = pd.DataFrame({
+    "Feature": X.columns,
+    "Importance": model.feature_importances_
+}).sort_values(by="Importance", ascending=False)
+
+print("\nFeature Importances:")
+print(importances)
+
+
+```
