@@ -317,7 +317,7 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("LightcastData").getOrCreate()
 
 # Get absolute path
-csv_path = os.path.abspath("./data/lightcast_job_postings.csv")
+csv_path = os.path.abspath("lightcast_job_postings.csv")
 print(csv_path)  # sanity check
 
 # Load CSV with absolute path
@@ -340,7 +340,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
 
 # Load dataset
-df = pd.read_csv("./data/lightcast_job_postings.csv", low_memory=False)
+df = pd.read_csv("lightcast_job_postings.csv", low_memory=False)
 
 # Select only numeric/categorical features for salary prediction
 features = [
