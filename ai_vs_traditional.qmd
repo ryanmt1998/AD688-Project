@@ -318,12 +318,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
+import numpy as np
 
 # Load dataset
-df = pd.read_csv("data/lightcast_job_postings.csv", low_memory=False)
-
-# Load dataset
-df = pd.read_csv("data/lightcast_job_postings.csv", low_memory=False)
+df = pd.read_csv("./data/lightcast_job_postings.csv", low_memory=False)
 
 # Select only numeric/categorical features for salary prediction
 features = [
@@ -356,21 +354,13 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Evaluate model
-from sklearn.metrics import r2_score, mean_squared_error
-import numpy as np
-
-print("R² Score:", r2_score(y_test, y_pred))
-
-# Compute RMSE manually
+r2 = r2_score(y_test, y_pred)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+print("R² Score:", r2)
 print("RMSE:", rmse)
 
-
-# Evaluate model
-print("R² Score:", r2_score(y_test, y_pred))
-print("RMSE:", mean_squared_error(y_test, y_pred, squared=False))
-
-# Optional: feature importance
+# Feature importance
 importances = pd.DataFrame({
     "Feature": X.columns,
     "Importance": model.feature_importances_
