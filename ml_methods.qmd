@@ -260,4 +260,22 @@ print(classification_report(y_test, y_pred))
 
 Using a Random Forest classifier to predict AI-related jobs based on skills, education, experience, industry, and job title, the model achieved an overall accuracy of 63%. The classifier performs better at identifying non-AI jobs (recall 0.80) than AI jobs (recall 0.40), indicating it is more likely to misclassify AI roles. Precision and F1-scores reflect this imbalance, with non-AI roles having higher scores than AI roles. These results suggest that while features like education, experience, and industry provide some predictive power, distinguishing AI from non-AI positions remains challenging with the current feature set.
 
+## Logistic Regression
+```{python}
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+# Initialize and train Logistic Regression
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_train, y_train)
+
+# Make predictions
+y_pred_log = log_reg.predict(X_test)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, y_pred_log))
+print(classification_report(y_test, y_pred_log))
+
+```
+The Logistic Regression Model has similar results to the RFC because the features are not too strong, leading to such outcomes.
 
