@@ -279,3 +279,49 @@ print(classification_report(y_test, y_pred_log))
 ```
 The Logistic Regression Model has similar results to the RFC because the features are not too strong, leading to such outcomes.
 
+
+## Linear Regression
+```{python}
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Features: AI_JOB, MIN_YEARS_EXPERIENCE, MAX_YEARS_EXPERIENCE, MIN_EDULEVELS, MAX_EDULEVELS
+features = ["AI_JOB", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "MIN_EDULEVELS", "MAX_EDULEVELS"]
+X_salary = df[features].apply(pd.to_numeric, errors='coerce').fillna(0)
+y_salary = pd.to_numeric(df["SALARY"], errors='coerce').fillna(0)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X_salary, y_salary, test_size=0.2, random_state=42
+)
+
+# Fit linear regression
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+
+# Predict
+y_pred = lr.predict(X_test)
+
+# Evaluate
+r2 = r2_score(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+print("R² Score:", r2)
+print("RMSE:", rmse)
+
+# Coefficients
+coefficients = pd.DataFrame({
+    "Feature": X_salary.columns,
+    "Coefficient": lr.coef_
+})
+print("\nCoefficients:")
+print(coefficients)
+
+print("\nIntercept (base salary):", lr.intercept_)
+
+```
+
+The Linear regression model examining salary differences between AI and Non-AI roles shows that experience and education are the main drivers of salary, while being an AI role has minimal direct effect. Specifically, each additional year of minimum experience increases salary by ~$3,579, and higher maximum education increases it by ~$3,507, whereas the AI_JOB coefficient is slightly negative (-$889). The model explains about 7.9% of salary variation (R² = 0.079), with an average prediction error of $63,043 (RMSE). The intercept (~$38,466) represents the predicted base salary for a non-AI job with zero experience and base education levels. Overall, salary differences are largely influenced by experience and education rather than AI-role designation.
