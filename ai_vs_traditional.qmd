@@ -307,7 +307,7 @@ Feature Importances:
 
 
 
-## Random Forest Classification
+## Random Forest Classification part 1 - selecting ai vs non ai and observation
 ```{python}
 import pandas as pd
 
@@ -328,8 +328,41 @@ df["AI_JOB"] = df["TITLE_CLEAN"].apply(
     lambda x: 1 if any(keyword.lower() in x.lower() for keyword in ai_keywords) else 0
 )
 
-# 5️⃣ Check how many AI vs Non-AI jobs
+#shows how many AI vs Non-AI jobs
 print(df["AI_JOB"].value_counts())
 
+#
+print(df.groupby("AI_JOB")["SALARY"].describe())
+
+df.groupby("AI_JOB")["NAICS_2022_6_NAME"].value_counts().head(10)
 
 ```
+
+In this dataset of 72,498 job postings, 30,197 positions (≈42%) were classified as AI-related, while 42,301 (≈58%) were non-AI. Non-AI roles have a slightly higher average salary ($128K vs. $105K for AI roles) and show substantial variation, with salaries ranging from $15K to $500K. Non-AI jobs are concentrated in consulting, administrative, and computer-related services, whereas AI roles are more dispersed across technical and data-focused industries. These patterns highlight differences in compensation and industry focus between AI and non-AI careers.
+
+
+
+## Random Forest Classification part 2 - features used to determine to predict ai vs non ai job  
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+features = ["SOFTWARE_SKILLS", "SPECIALIZED_SKILLS", "MIN_EDULEVELS", "MAX_EDULEVELS", "NAICS_2022_6_NAME", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "SOC_5_NAME" ]
+X = df[features].apply(pd.to_numeric, errors='coerce').fillna(0)
+y = df["AI_JOB"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+rf_clf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_clf.fit(X_train, y_train)
+y_pred = rf_clf.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+```
+
+Using a Random Forest classifier to predict AI-related jobs based on skills, education, experience, industry, and job title, the model achieved an overall accuracy of 63%. The classifier performs better at identifying non-AI jobs (recall 0.80) than AI jobs (recall 0.40), indicating it is more likely to misclassify AI roles. Precision and F1-scores reflect this imbalance, with non-AI roles having higher scores than AI roles. These results suggest that while features like education, experience, and industry provide some predictive power, distinguishing AI from non-AI positions remains challenging with the current feature set.
+
+
