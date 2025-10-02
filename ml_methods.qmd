@@ -1,0 +1,325 @@
+## Cluster
+```{python}
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, when, lower
+from pyspark.sql.types import DoubleType
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import StringIndexer, VectorAssembler
+from pyspark.ml.clustering import KMeans
+from pyspark.ml.evaluation import ClusteringEvaluator
+import pandas as pd
+import hvplot.pandas
+import panel as pn
+pn.extension()
+from itables import show
+```
+
+
+
+
+```{python}
+## Load the Lightcast Job Posting Data
+spark = SparkSession.builder \
+.appName("AI_vs_NonAI_JobPostings") \
+.config("spark.driver.memory", "4g") \
+.getOrCreate()
+
+
+df = spark.read.option("header", "true") \
+    .option("inferSchema", "true") \
+    .option("multiLine", "true") \
+    .option("escape", "\"") \
+    .csv("./data/lightcast_job_postings.csv")
+
+```
+
+
+```{python}
+## Drop Columns
+columns_to_drop = {'ID', 'URL', 'ACTIVE_URLS', 'DUPLICATES', 'LAST_UPDATED_TIMESTAMP',
+'NAICS2', 'NAICS3', 'NAICS4', 'NAICS5', 'NAICS6',
+'SOC_2', 'SOC_3', 'SOC_5'
+}
+
+
+df_cleaned = df.drop(*columns_to_drop)
+```
+
+
+```{python}
+
+## AI vs Non-AI Classification
+
+df_cleaned = df_cleaned.withColumn(
+"AI_OR_NON_AI_ROLES",
+when(
+    (lower(col("TITLE_NAME")).contains("artificial intelligence")) |
+    (lower(col("TITLE_NAME")).contains(" ai ")) |
+    (lower(col("TITLE_NAME")).contains("machine learning")) |
+    (lower(col("TITLE_NAME")).contains("data scientist")) |
+    (lower(col("TITLE_NAME")).contains("ml engineer")) |
+    (lower(col("SKILLS_NAME")).contains("machine learning")) |
+    (lower(col("SKILLS_NAME")).contains("artificial intelligence")) |
+    (lower(col("SKILLS_NAME")).contains("deep learning")) |
+    (lower(col("SKILLS_NAME")).contains("neural network")),
+    1
+).otherwise(0)
+)
+
+
+```
+
+
+```{python}
+##Data Cleaning
+
+
+df_clean = df_cleaned.dropna(subset=["MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "SALARY_FROM", "SALARY_TO", "NAICS_2022_6_NAME", "TITLE_NAME"])
+
+
+```
+
+
+```{python}
+##AVERAGE SALARY
+
+df_clean = df_clean.withColumn("AVG_SALARY", ((col("SALARY_FROM") + col("SALARY_TO")) / 2).cast(DoubleType())
+)
+
+```
+
+
+```{python}
+##Relevant Columns
+
+df_casted = df_clean.select(
+    col("TITLE_NAME"),
+    col("NAICS_2022_6_NAME"),
+    col("NAICS_2022_6").cast(DoubleType()),
+    col("MIN_YEARS_EXPERIENCE").cast(DoubleType()),
+    col("MAX_YEARS_EXPERIENCE").cast(DoubleType()),
+    col("DURATION").cast(DoubleType()),
+    col("AVG_SALARY"),
+    col("AI_OR_NON_AI_ROLES").cast(DoubleType())
+).dropna()
+
+
+show(df_casted.toPandas().head())
+```
+
+
+
+
+```{python}
+##Vector Assembler and StringIndexer
+title_indexer = StringIndexer(inputCol="TITLE_NAME", outputCol="TITLE_INDEX", handleInvalid="keep")
+industry_indexer = StringIndexer(inputCol="NAICS_2022_6_NAME", outputCol="INDUSTRY_INDEX", handleInvalid="keep")
+
+assembler = VectorAssembler(
+inputCols=["TITLE_INDEX", "INDUSTRY_INDEX", "NAICS_2022_6", "AVG_SALARY", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "DURATION", "AI_OR_NON_AI_ROLES"],
+outputCol="features"
+)
+```
+
+
+```{python}
+##K-means Clustering Model
+kmeans = KMeans(featuresCol="features", predictionCol="cluster", k=3, seed=1)
+```
+
+
+```{python}
+pipeline = Pipeline(stages = [title_indexer, industry_indexer, assembler, kmeans])
+
+model = pipeline.fit(df_casted)
+
+```
+
+
+```{python}
+df_clustered = model.transform(df_casted)
+evaluator = ClusteringEvaluator(featuresCol="features", predictionCol="cluster")
+silhouette = evaluator.evaluate(df_clustered)
+```
+
+
+```{python}
+from pyspark.sql.functions import avg
+##Cluster Count
+df_clustered.groupBy("cluster").count().show()
+
+##The distribution of AI vs non-AI roles within each cluster.
+df_clustered.groupBy("cluster", "AI_OR_NON_AI_ROLES").count().orderBy("cluster", "AI_OR_NON_AI_ROLES").show()
+
+##Average salaries between AI and non-AI roles
+df_clustered.groupBy("AI_OR_NON_AI_ROLES").agg(
+    avg("AVG_SALARY").alias("avg_salary")
+).show()
+
+##Most common industries for AI and non-AI roles
+df_clustered.groupBy("AI_OR_NON_AI_ROLES", "NAICS_2022_6_NAME").count().orderBy("AI_OR_NON_AI_ROLES", "count", ascending=False).show()
+
+##Most frequent job titles in AI vs non-AI roles
+df_clustered.groupBy("AI_OR_NON_AI_ROLES", "TITLE_NAME").count().orderBy("AI_OR_NON_AI_ROLES", "count", ascending=False).show()
+```
+
+
+
+```{python}
+# Interactive EDA: Pairwise Plots with HoloViz
+import pandas as pd
+import hvplot.pandas
+import panel as pn
+pn.extension()
+
+
+# Use cleaned PDF
+pdf = df_clustered.select(
+"MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "AVG_SALARY", "AI_OR_NON_AI_ROLES","DURATION","NAICS_2022_6", "TITLE_NAME"
+).toPandas()
+
+
+cols = ["MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "AVG_SALARY", "DURATION", "NAICS_2022_6" ]
+pdf[cols] = pdf[cols].apply(pd.to_numeric, errors='coerce')
+pdf = pdf.dropna(subset=cols + ["AI_OR_NON_AI_ROLES"])
+
+plots = []
+for x in cols:
+    for y in cols:
+        if x != y:
+            plot = pdf.hvplot.scatter(
+                x=x, y=y, by='AI_OR_NON_AI_ROLES', width=450, height=250, alpha=0.6, title=f"{y} vs {x}"
+            )
+            plots.append(plot)
+
+pn.GridBox(*plots, ncols=2)
+```
+
+
+
+
+
+
+## Random Forest Classification part 1 - selecting ai vs non ai and observation
+```{python}
+import pandas as pd
+
+df = pd.read_csv("lightcast_job_postings.csv", low_memory=False)
+
+#TITLE_CLEAN is a string
+df["TITLE_CLEAN"] = df["TITLE_CLEAN"].astype(str)
+
+#defining AI-related keywords
+ai_keywords = [
+    "AI", "Artificial Intelligence", "Machine Learning", "Deep Learning",
+    "Neural", "Data Scientist", "Computer Vision", "NLP", "Natural Language",
+    "LLM", "Chatbot", "Generative", "Data Engineer", "Software", "Data"
+]
+
+#creatung AI_JOB column: 1 = AI job, 0 = Non-AI job
+df["AI_JOB"] = df["TITLE_CLEAN"].apply(
+    lambda x: 1 if any(keyword.lower() in x.lower() for keyword in ai_keywords) else 0
+)
+
+#shows how many AI vs Non-AI jobs
+print(df["AI_JOB"].value_counts())
+
+#
+print(df.groupby("AI_JOB")["SALARY"].describe())
+
+df.groupby("AI_JOB")["NAICS_2022_6_NAME"].value_counts().head(10)
+
+```
+
+In this dataset of 72,498 job postings, 30,197 positions (≈42%) were classified as AI-related, while 42,301 (≈58%) were non-AI. Non-AI roles have a slightly higher average salary ($128K vs. $105K for AI roles) and show substantial variation, with salaries ranging from $15K to $500K. Non-AI jobs are concentrated in consulting, administrative, and computer-related services, whereas AI roles are more dispersed across technical and data-focused industries. These patterns highlight differences in compensation and industry focus between AI and non-AI careers.
+
+
+
+## Random Forest Classification part 2 - features used to determine to predict ai vs non ai job  
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+features = ["SOFTWARE_SKILLS", "SPECIALIZED_SKILLS", "MIN_EDULEVELS", "MAX_EDULEVELS", "NAICS_2022_6_NAME", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "SOC_5_NAME" ]
+X = df[features].apply(pd.to_numeric, errors='coerce').fillna(0)
+y = df["AI_JOB"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+rf_clf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_clf.fit(X_train, y_train)
+y_pred = rf_clf.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+```
+
+Using a Random Forest classifier to predict AI-related jobs based on skills, education, experience, industry, and job title, the model achieved an overall accuracy of 63%. The classifier performs better at identifying non-AI jobs (recall 0.80) than AI jobs (recall 0.40), indicating it is more likely to misclassify AI roles. Precision and F1-scores reflect this imbalance, with non-AI roles having higher scores than AI roles. These results suggest that while features like education, experience, and industry provide some predictive power, distinguishing AI from non-AI positions remains challenging with the current feature set.
+
+## Logistic Regression
+```{python}
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+# Initialize and train Logistic Regression
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_train, y_train)
+
+# Make predictions
+y_pred_log = log_reg.predict(X_test)
+
+# Evaluate model
+print("Accuracy:", accuracy_score(y_test, y_pred_log))
+print(classification_report(y_test, y_pred_log))
+
+```
+The Logistic Regression Model has similar results to the RFC because the features are not too strong, leading to such outcomes.
+
+
+## Linear Regression
+```{python}
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import numpy as np
+
+# Features: AI_JOB, MIN_YEARS_EXPERIENCE, MAX_YEARS_EXPERIENCE, MIN_EDULEVELS, MAX_EDULEVELS
+features = ["AI_JOB", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "MIN_EDULEVELS", "MAX_EDULEVELS"]
+X_salary = df[features].apply(pd.to_numeric, errors='coerce').fillna(0)
+y_salary = pd.to_numeric(df["SALARY"], errors='coerce').fillna(0)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X_salary, y_salary, test_size=0.2, random_state=42
+)
+
+# Fit linear regression
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+
+# Predict
+y_pred = lr.predict(X_test)
+
+# Evaluate
+r2 = r2_score(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+print("R² Score:", r2)
+print("RMSE:", rmse)
+
+# Coefficients
+coefficients = pd.DataFrame({
+    "Feature": X_salary.columns,
+    "Coefficient": lr.coef_
+})
+print("\nCoefficients:")
+print(coefficients)
+
+print("\nIntercept (base salary):", lr.intercept_)
+
+```
+
+The Linear regression model examining salary differences between AI and Non-AI roles shows that experience and education are the main drivers of salary, while being an AI role has minimal direct effect. Specifically, each additional year of minimum experience increases salary by ~$3,579, and higher maximum education increases it by ~$3,507, whereas the AI_JOB coefficient is slightly negative (-$889). The model explains about 7.9% of salary variation (R² = 0.079), with an average prediction error of $63,043 (RMSE). The intercept (~$38,466) represents the predicted base salary for a non-AI job with zero experience and base education levels. Overall, salary differences are largely influenced by experience and education rather than AI-role designation.

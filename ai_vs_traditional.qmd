@@ -130,8 +130,17 @@ assembler = VectorAssembler(
 ```
 
 ```{python}
+##scaler
+from pyspark.ml.feature import StandardScaler
+scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures", withMean=True, withStd=True)
+
+
+
+```
+
+```{python}
 ##K-means Clustering Model
-kmeans = KMeans(featuresCol="features", predictionCol="cluster", k=3, seed=1)
+kmeans = KMeans(featuresCol="scaledFeatures", predictionCol="cluster", k=3, seed=1)
 
 
 
@@ -139,7 +148,7 @@ kmeans = KMeans(featuresCol="features", predictionCol="cluster", k=3, seed=1)
 
 ```{python}
 ##Pipeline
-pipeline = Pipeline(stages = [title_indexer, industry_indexer, assembler, kmeans])
+pipeline = Pipeline(stages = [title_indexer, industry_indexer, assembler, scaler, kmeans])
 
 model = pipeline.fit(df_casted)
 
@@ -147,23 +156,28 @@ model = pipeline.fit(df_casted)
 
 ```{python}
 df_clustered = model.transform(df_casted)
-evaluator = ClusteringEvaluator(featuresCol="features", predictionCol="cluster")
+evaluator = ClusteringEvaluator(featuresCol="scaledFeatures", predictionCol="cluster")
 silhouette = evaluator.evaluate(df_clustered)
 ```
 
 ```{python}
 ##Cluster Count
+from pyspark.sql.functions import avg
+#Size of each cluster
 df_clustered.groupBy("cluster").count().show()
 
+##The distribution of AI vs non-AI roles within each cluster.
 df_clustered.groupBy("cluster", "IS_AI_ROLE").count().orderBy("cluster", "IS_AI_ROLE").show()
 
-
+##Average salaries between AI and non-AI roles
 df_clustered.groupBy("IS_AI_ROLE").agg(
     avg("AVG_SALARY").alias("avg_salary")
 ).show()
 
+##Most common industries for AI and non-AI roles
 df_clustered.groupBy("IS_AI_ROLE", "NAICS_2022_6_NAME").count().orderBy("IS_AI_ROLE", "count", ascending=False).show()
 
+##Most frequent job titles in AI vs non-AI roles
 df_clustered.groupBy("IS_AI_ROLE", "TITLE_NAME").count().orderBy("IS_AI_ROLE", "count", ascending=False).show()
 
 
@@ -196,6 +210,40 @@ for x in cols:
             plots.append(plot)
 
 pn.GridBox(*plots, ncols=2)
+
+
+
+
+
+
+```
+
+```{python}
+from pyspark.ml.clustering import KMeans
+from pyspark.ml.evaluation import ClusteringEvaluator
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+ks = list(range(2, 11))
+scores = []
+
+for k in ks:
+    kmeans = KMeans(featuresCol="scaledFeatures", predictionCol="cluster", k=k, seed=1)
+    pipeline = Pipeline(stages=[title_indexer, industry_indexer, assembler, scaler, kmeans])
+    model = pipeline.fit(df_casted)
+    df_clustered = model.transform(df_casted)
+    evaluator = ClusteringEvaluator(featuresCol="scaledFeatures", predictionCol="cluster")
+    silhouette = evaluator.evaluate(df_clustered)
+    scores.append(silhouette)
+    print(f"k={k}, Silhouette Score={silhouette}")
+
+# Plot silhouette scores vs k
+sns.lineplot(x=ks, y=scores, marker="o")
+plt.xlabel("Number of Clusters (k)")
+plt.ylabel("Silhouette Score")
+plt.title("Silhouette Score vs. k (Elbow Method)")
+plt.grid(True)
+plt.show()
 
 
 
