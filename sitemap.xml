@@ -2,42 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/eda.html</loc>
-    <lastmod>2025-10-06T19:45:03.608Z</lastmod>
+    <lastmod>2025-10-06T19:50:23.195Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html</loc>
-    <lastmod>2025-10-06T19:45:09.075Z</lastmod>
+    <lastmod>2025-10-06T19:50:28.640Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/skill_gap_analysis.html</loc>
-    <lastmod>2025-10-06T19:45:03.676Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
-    <lastmod>2025-10-06T19:45:03.668Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
-    <lastmod>2025-10-06T19:45:03.603Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
-    <lastmod>2025-10-06T19:45:03.602Z</lastmod>
+    <lastmod>2025-10-06T19:50:23.263Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/ml_methods_2.html</loc>
-    <lastmod>2025-10-06T19:45:03.669Z</lastmod>
+    <lastmod>2025-10-06T19:50:23.257Z</lastmod>
   </url>
   <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/ml_methods.html</loc>
-    <lastmod>2025-10-06T19:45:03.669Z</lastmod>
+    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
+    <lastmod>2025-10-06T19:50:23.190Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
+    <lastmod>2025-10-06T19:50:23.191Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
+    <lastmod>2025-10-06T19:50:23.256Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/nlp_methods.html</loc>
-    <lastmod>2025-10-06T19:45:03.672Z</lastmod>
+    <lastmod>2025-10-06T19:50:23.259Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/narwhals-2.4.0.dist-info/licenses/LICENSE.html</loc>
-    <lastmod>2025-10-06T19:45:09.079Z</lastmod>
+    <lastmod>2025-10-06T19:50:28.645Z</lastmod>
   </url>
 </urlset>
