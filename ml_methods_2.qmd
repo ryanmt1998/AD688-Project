@@ -21,12 +21,8 @@ As a group, we will be implementing an unsupervised clustering model using the K
 #    .option("multiLine", "true") \
 #    .option("escape", "\"") \
 #    .csv("./data/lightcast_job_postings.csv")
-
-
-
 ```
 ```{python echo=false}
-
 # Drop unnecessary columns
 #columns_to_drop = [
 #    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
@@ -81,8 +77,6 @@ As a group, we will be implementing an unsupervised clustering model using the K
 
 # Create binary column IS_AI_ROLE
 #df = df.withColumn("IS_AI_ROLE", when(ai_condition, 1).otherwise(0))
-
-
 ```
 ```{python echo=false}
 
@@ -101,7 +95,6 @@ As a group, we will be implementing an unsupervised clustering model using the K
 
 # Fit pipeline
 #model = pipeline.fit(df)
-
 ```
 
 # Features and Silhouette Score
@@ -133,9 +126,6 @@ Grouping these features in a cluster of 2, we found a silhouette score of approx
 
 # Show cluster counts grouped by AI role
 #predictions.groupBy("IS_AI_ROLE", "CLUSTER").count().show()
-
-
-
 ```
 
 # Pairwise Plots
@@ -177,8 +167,6 @@ It would be unusual to see any AI jobs since AI jobs are not common in the hirin
 
 # Save the interactive grid as an HTML file
 #grid.save("figures/interactive_plots.html", embed=True)
-
-
 ```
 
 [View Interactive Plots](figures/interactive_plots.html)
@@ -230,8 +218,6 @@ The results of the PCA plots indicate the there are now two visually distinct cl
 #plot_pcs_save("PC1", "PC2", "pca_PC1_vs_PC2.png")
 #plot_pcs_save("PC1", "PC3", "pca_PC1_vs_PC3.png")
 #plot_pcs_save("PC2", "PC3", "pca_PC2_vs_PC3.png")
-
-
 ```
 
 ![](figures/pca_PC1_vs_PC2.png)
@@ -258,16 +244,12 @@ The results of the PCA plots indicate the there are now two visually distinct cl
 #no_of_components = 3
 #pca = PCA(k=no_of_components, inputCol="features_no_salary", outputCol="pcaFeatures")
 #pca_model = pca.fit(df_features)
-
-
 ```
 ```{python echo=false}
 
 # Step 3: Transform data to get PCA features (optional, for inspection)
 #pca_result = pca_model.transform(df_features).select("pcaFeatures")
 #pca_result.show(truncate=False)
-
-
 ```
 
 
@@ -300,9 +282,10 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 
 # Step 6: Print loadings
 #print(loading_scores)
-
-
 ```
+
+# Logistic Regression 
+
 ```{python echo=false}
 
 #from pyspark.sql import SparkSession
@@ -381,8 +364,6 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #recall = tp / (tp + fn) if tp + fn > 0 else 0
 #f1 = 2 * (precision * recall) / (precision + recall) if precision + recall > 0 else 0
 #print(f"precision: {precision}, recall: {recall}, f1 score: {f1}")
-
-
 ```
 
 The logistic regression model for predicting AI-related jobs was trained on a dataset with a highly imbalanced target variable, where AI jobs are much less frequent than non-AI jobs. The features used in this iteration were `NAICS_2022_6` (encoded as categorical) and `AVG_YEARS_EXPERIENCE` (numeric), while other potentially predictive features such as salary or job title information were not included. After implementing class weighting to address the imbalance, the model achieved a ROC AUC of 0.62, indicating modest discriminative ability between AI and non-AI jobs. Overall accuracy was 0.64, which is lower than the unweighted model but reflects that the model now predicts some AI jobs instead of defaulting to non-AI. Precision was very low at 0.029, meaning that most predicted AI jobs are actually non-AI, while recall was 0.515, showing that the model correctly identifies about half of the actual AI jobs. The F1 score was 0.055, reflecting the low precision despite the improved recall.
