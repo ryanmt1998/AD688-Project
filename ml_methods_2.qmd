@@ -1,12 +1,12 @@
 ---
 title: "ML Methods"
 format:
-  html:
-    toc: true
-    number-sections: true
-    df-print: paged
+    html:
+        toc: true
+        number-sections: true
+        df-print: paged
 execute:
-  echo: false
+    echo: false
 ---
 
 # Unsupervised Clustering
