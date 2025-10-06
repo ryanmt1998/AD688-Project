@@ -137,7 +137,6 @@ Grouping these features in a cluster of 2, we found a silhouette score of approx
 
 
 ```
-```{python echo=false}
 
 # Pairwise Plots
 
@@ -146,7 +145,7 @@ Below are a series of pairwise plots showing the relationships between the featu
 It would be unusual to see any AI jobs since AI jobs are not common in the hiring process. The few present in the visualizations are likely the ones that require higher technical skills in the ML domain. To further study our prompt, other processes will need to be performed.
 
 
-```
+
 ```{python echo=false}
 
 #import hvplot.pandas
