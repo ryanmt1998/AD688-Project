@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Job Market Analysis 2024 – ml_methods</title>
+<title>Job Market Analysis 2024 - ML Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -119,15 +153,401 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#unsupervised-clustering" id="toc-unsupervised-clustering" class="nav-link active" data-scroll-target="#unsupervised-clustering">Unsupervised Clustering</a></li>
+  <li><a href="#features-and-silhouette-score" id="toc-features-and-silhouette-score" class="nav-link" data-scroll-target="#features-and-silhouette-score">Features and Silhouette Score</a></li>
+  <li><a href="#pairwise-plots" id="toc-pairwise-plots" class="nav-link" data-scroll-target="#pairwise-plots">Pairwise Plots</a></li>
+  <li><a href="#pca-2d-visualization-excluding-salary" id="toc-pca-2d-visualization-excluding-salary" class="nav-link" data-scroll-target="#pca-2d-visualization-excluding-salary">PCA 2D Visualization Excluding Salary</a></li>
+  <li><a href="#pca-loadings-table" id="toc-pca-loadings-table" class="nav-link" data-scroll-target="#pca-loadings-table">PCA Loadings Table</a></li>
+  <li><a href="#differences-between-ai-and-non-ai-job-postings-using-k-means-clustering" id="toc-differences-between-ai-and-non-ai-job-postings-using-k-means-clustering" class="nav-link" data-scroll-target="#differences-between-ai-and-non-ai-job-postings-using-k-means-clustering">Differences Between AI and Non-AI Job Postings Using K-Means Clustering</a></li>
+  <li><a href="#the-logistic-regression-model" id="toc-the-logistic-regression-model" class="nav-link" data-scroll-target="#the-logistic-regression-model">The Logistic Regression Model</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ML Methods</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="unsupervised-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="unsupervised-clustering">Unsupervised Clustering</h2>
+<p>As a group, we will be implementing an unsupervised clustering model using the K-mean algorithm. We are seeking to differentiate AI-related jobs postings from non-AI ones. AI-related job postings will be defined by AI-related keywords. The results will serve to tell us how how certain features separate AI-related job postings from non-AI.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when, lower</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> DoubleType</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, VectorAssembler</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.clustering <span class="im">import</span> KMeans</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> ClusteringEvaluator</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Load the Lightcast Job Posting Data</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder <span class="op">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>.appName(<span class="st">"AI_vs_NonAI_JobPostings"</span>) <span class="op">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>.config(<span class="st">"spark.driver.memory"</span>, <span class="st">"4g"</span>) <span class="op">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>.getOrCreate()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> spark.read.option(<span class="st">"header"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"inferSchema"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"multiLine"</span>, <span class="st">"true"</span>) <span class="op">\</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    .option(<span class="st">"escape"</span>, <span class="st">"</span><span class="ch">\"</span><span class="st">"</span>) <span class="op">\</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    .csv(<span class="st">"./data/lightcast_job_postings.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop unnecessary columns</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"SOC_2"</span>, <span class="st">"SOC_3"</span>, <span class="st">"SOC_5"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(<span class="op">*</span>columns_to_drop)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter rows with non-null salary and classification columns</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.<span class="bu">filter</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"SALARY_FROM"</span>).isNotNull()) <span class="op">&amp;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"SALARY_TO"</span>).isNotNull()) <span class="op">&amp;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"TITLE_RAW"</span>).isNotNull()) <span class="op">&amp;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"NAICS_2022_6"</span>).isNotNull()) <span class="op">&amp;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).isNotNull()) <span class="op">&amp;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    (col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).isNotNull())</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert salary columns to numeric</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_FROM"</span>, col(<span class="st">"SALARY_FROM"</span>).cast(DoubleType()))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"SALARY_TO"</span>, col(<span class="st">"SALARY_TO"</span>).cast(DoubleType()))</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Create average salary column</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"AVG_SALARY"</span>, (col(<span class="st">"SALARY_FROM"</span>) <span class="op">+</span> col(<span class="st">"SALARY_TO"</span>)) <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert experience columns and create average experience column</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MIN_YEARS_EXPERIENCE"</span>, col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).cast(DoubleType()))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MAX_YEARS_EXPERIENCE"</span>, col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).cast(DoubleType()))</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"AVG_YEARS_EXPERIENCE"</span>, (col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>) <span class="op">+</span> col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>)) <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with null values in critical columns</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">'AVG_SALARY'</span>, <span class="st">'TITLE_RAW'</span>, <span class="st">'NAICS_2022_6'</span>, <span class="st">'AVG_YEARS_EXPERIENCE'</span>])</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Lowercase the TITLE_RAW column for keyword matching</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"TITLE_LOWER"</span>, lower(col(<span class="st">"TITLE_RAW"</span>)))</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># List of AI keywords</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>ai_keywords <span class="op">=</span> [</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ai"</span>, <span class="st">"artificial intelligence"</span>, <span class="st">"machine learning"</span>, <span class="st">"deep learning"</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"neural network"</span>, <span class="st">"nlp"</span>, <span class="st">"computer vision"</span>, <span class="st">"chatgpt"</span>, <span class="st">"gpt-3"</span>, <span class="st">"gpt-4"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"llm"</span>, <span class="st">"large language model"</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Build condition for presence of AI keywords</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>ai_condition <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> keyword <span class="kw">in</span> ai_keywords:</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    condition <span class="op">=</span> col(<span class="st">"TITLE_LOWER"</span>).contains(keyword)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ai_condition <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        ai_condition <span class="op">=</span> condition</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        ai_condition <span class="op">=</span> ai_condition <span class="op">|</span> condition</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Create binary column IS_AI_ROLE</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"IS_AI_ROLE"</span>, when(ai_condition, <span class="dv">1</span>).otherwise(<span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define pipeline stages</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>title_indexer <span class="op">=</span> StringIndexer(inputCol<span class="op">=</span><span class="st">"TITLE_RAW"</span>, outputCol<span class="op">=</span><span class="st">"TITLE_ENCODED"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>naics_indexer <span class="op">=</span> StringIndexer(inputCol<span class="op">=</span><span class="st">"NAICS_2022_6"</span>, outputCol<span class="op">=</span><span class="st">"NAICS_ENCODED"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>assembler <span class="op">=</span> VectorAssembler(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    inputCols<span class="op">=</span>[<span class="st">"TITLE_ENCODED"</span>, <span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_SALARY"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>], </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    outputCol<span class="op">=</span><span class="st">"features"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(featuresCol<span class="op">=</span><span class="st">"features"</span>, predictionCol<span class="op">=</span><span class="st">"CLUSTER"</span>, k<span class="op">=</span><span class="dv">2</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create pipeline</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline(stages<span class="op">=</span>[title_indexer, naics_indexer, assembler, kmeans])</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit pipeline</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> pipeline.fit(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="features-and-silhouette-score" class="level1">
+<h1>Features and Silhouette Score</h1>
+<p>We will be using the following features for our clustering model:</p>
+<ul>
+<li>Average Salary, expected to capture pay differences</li>
+<li>Job Title (Encoded), expected to capture role differences</li>
+<li>NAICS Code (Encoded), expected to separate jobs by sectors</li>
+<li>Average Years of Experience, expected to capture experience level differences</li>
+</ul>
+<p>Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform data to get cluster predictions</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> model.transform(df)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate clustering</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>evaluator <span class="op">=</span> ClusteringEvaluator(featuresCol<span class="op">=</span><span class="st">"features"</span>, predictionCol<span class="op">=</span><span class="st">"CLUSTER"</span>, metricName<span class="op">=</span><span class="st">"silhouette"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>silhouette <span class="op">=</span> evaluator.evaluate(predictions)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Silhouette score = </span><span class="sc">{</span>silhouette<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Show cluster counts grouped by AI role</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>predictions.groupBy(<span class="st">"IS_AI_ROLE"</span>, <span class="st">"CLUSTER"</span>).count().show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pairwise-plots" class="level1">
+<h1>Pairwise Plots</h1>
+<p>Below are a series of pairwise plots showing the relationships between the features used in the clustering model, consisting of Average Salary, Job Title (Encoded), NAICS Code (Encoded), and Average Years of Experience. The plots seek to visualize how these features interact and potentially separate AI-related job postings from non-AI ones. From the plots, a clear relationship is not visible between the features due to the lower number of AI-related job postings in the dataset.</p>
+<p>It would be unusual to see any AI jobs since AI jobs are not common in the hiring process. The few present in the visualizations are likely the ones that require higher technical skills in the ML domain. To further study our prompt, other processes will need to be performed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hvplot.pandas</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> panel <span class="im">as</span> pn</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>pn.extension()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample 5% of the data to reduce size for plotting</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sample_pdf <span class="op">=</span> predictions.select(<span class="st">"AVG_SALARY"</span>, <span class="st">"TITLE_ENCODED"</span>, <span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>, <span class="st">"IS_AI_ROLE"</span>) <span class="op">\</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    .sample(fraction<span class="op">=</span><span class="fl">0.05</span>, seed<span class="op">=</span><span class="dv">42</span>) <span class="op">\</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    .toPandas()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Map IS_AI_ROLE to string labels for coloring</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>sample_pdf[<span class="st">'Role'</span>] <span class="op">=</span> sample_pdf[<span class="st">'IS_AI_ROLE'</span>].<span class="bu">map</span>({<span class="dv">0</span>: <span class="st">'Non-AI'</span>, <span class="dv">1</span>: <span class="st">'AI'</span>})</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns to plot</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">"AVG_SALARY"</span>, <span class="st">"TITLE_ENCODED"</span>, <span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plots <span class="op">=</span> []</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> cols:</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> y <span class="kw">in</span> cols:</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> x <span class="op">!=</span> y:</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            plot <span class="op">=</span> sample_pdf.hvplot.scatter(</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                x<span class="op">=</span>x, y<span class="op">=</span>y, by<span class="op">=</span><span class="st">'Role'</span>, width<span class="op">=</span><span class="dv">450</span>, height<span class="op">=</span><span class="dv">250</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, title<span class="op">=</span><span class="ss">f"</span><span class="sc">{</span>y<span class="sc">}</span><span class="ss"> vs </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>            plots.append(plot)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange plots in a grid with 2 columns</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>pn.GridBox(<span class="op">*</span>plots, ncols<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pca-2d-visualization-excluding-salary" class="level1">
+<h1>PCA 2D Visualization Excluding Salary</h1>
+<p>Generating a 2D PCA plot excluding salary to visualize the clustering of AI-related and non-AI jobs based served as a useful alternative to the previous pairwise plots. The following PCA plots consist of PC1 vs PC2, PC1 vs PC3, and PC2 vs PC3.</p>
+<p>The PC1 vs PC2 plots shows some separation between clusters along PC1, but a lot of overlap along PC2. The PC1 vs PC3 plot demonstrates a clearer separation between the clusters, with cluster groups more distinctly divided along PC3. The PC2 vs PC3 presents moderate cluster separation, with the appearance of vertical banding along PC2.</p>
+<p>The results of the PCA plots indicate the there are now two visually distinct clusters, which is an improvement from the previous pairwise plots. However, there is still confusion regarding which features strongly divide AI-related job postings from non-AI ones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler, PCA</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Assemble features excluding AVG_SALARY</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>assembler_no_salary <span class="op">=</span> VectorAssembler(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    inputCols<span class="op">=</span>[<span class="st">"TITLE_ENCODED"</span>, <span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>],</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    outputCol<span class="op">=</span><span class="st">"features_no_salary"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>df_features <span class="op">=</span> assembler_no_salary.transform(predictions)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Fit PCA with k=3 (max components for 3 features)</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(k<span class="op">=</span><span class="dv">3</span>, inputCol<span class="op">=</span><span class="st">"features_no_salary"</span>, outputCol<span class="op">=</span><span class="st">"pcaFeatures"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>pca_model <span class="op">=</span> pca.fit(df_features)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>pca_result <span class="op">=</span> pca_model.transform(df_features)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Convert to Pandas for plotting</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>pdf_pca <span class="op">=</span> pca_result.select(<span class="st">"pcaFeatures"</span>, <span class="st">"CLUSTER"</span>).toPandas()</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract PCA components to separate columns</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>pdf_pca[<span class="st">"PC1"</span>] <span class="op">=</span> pdf_pca[<span class="st">"pcaFeatures"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">0</span>])</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>pdf_pca[<span class="st">"PC2"</span>] <span class="op">=</span> pdf_pca[<span class="st">"pcaFeatures"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">1</span>])</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>pdf_pca[<span class="st">"PC3"</span>] <span class="op">=</span> pdf_pca[<span class="st">"pcaFeatures"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x[<span class="dv">2</span>])</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Plotting function</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_pcs(x, y):</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(data<span class="op">=</span>pdf_pca, x<span class="op">=</span>x, y<span class="op">=</span>y, hue<span class="op">=</span><span class="st">"CLUSTER"</span>, palette<span class="op">=</span><span class="st">"deep"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"PCA Scatter Plot: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss"> vs </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PC1 vs PC2</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>plot_pcs(<span class="st">"PC1"</span>, <span class="st">"PC2"</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PC1 vs PC3</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>plot_pcs(<span class="st">"PC1"</span>, <span class="st">"PC3"</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PC2 vs PC3</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>plot_pcs(<span class="st">"PC2"</span>, <span class="st">"PC3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pca loadings from the data, and it will show which variable contributes to which component</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> VectorAssembler, PCA</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace with your actual feature columns</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>features_list <span class="op">=</span> [<span class="st">"TITLE_ENCODED"</span>, <span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Assemble features into a vector column</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>assembler <span class="op">=</span> VectorAssembler(inputCols<span class="op">=</span>features_list, outputCol<span class="op">=</span><span class="st">"features_no_salary"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>df_features <span class="op">=</span> assembler.transform(predictions)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Fit PCA with k=3 components</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>no_of_components <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(k<span class="op">=</span>no_of_components, inputCol<span class="op">=</span><span class="st">"features_no_salary"</span>, outputCol<span class="op">=</span><span class="st">"pcaFeatures"</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>pca_model <span class="op">=</span> pca.fit(df_features)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Transform data to get PCA features (optional, for inspection)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pca_result <span class="op">=</span> pca_model.transform(df_features).select(<span class="st">"pcaFeatures"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>pca_result.show(truncate<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pca-loadings-table" class="level1">
+<h1>PCA Loadings Table</h1>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>PCA1</th>
+<th>PCA2</th>
+<th>PCA3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TITLE_ENCODED</td>
+<td>-0.999826</td>
+<td>0.018638</td>
+<td>-0.000502</td>
+</tr>
+<tr class="even">
+<td>NAICS_ENCODED</td>
+<td>-0.018640</td>
+<td>-0.999809</td>
+<td>0.005905</td>
+</tr>
+<tr class="odd">
+<td>AVG_YEARS_EXPERIENCE</td>
+<td>-0.000392</td>
+<td>0.005913</td>
+<td>0.999982</td>
+</tr>
+</tbody>
+</table>
+<p>Loading the data set, PC1 is entirely dominated by TITLE_ENCODED, with a coefficient of 0.999. This means the differences in job titles are the main factor separating the clusters. The second largest variance, PC2, is dominated by NAICS_ENCODED with a coefficient of 0.998, indicating that the industry sector is the next most important factor. PC3 is dominated by AVG_YEARS_EXPERIENCE with a coefficient of 0.999, suggesting that experience level is also a significant factor in distinguishing between job postings, which could lead to differences in salary.</p>
+</section>
+<section id="differences-between-ai-and-non-ai-job-postings-using-k-means-clustering" class="level1">
+<h1>Differences Between AI and Non-AI Job Postings Using K-Means Clustering</h1>
+<p>Using K-means clustering, we identified two clusters in our dataset through a series of processes including selecting features, calculating a silhouette score, and visualizing the data using PCA 2D plots. Although this is an unsupervised learning method, the clusters likely correspond to AI-related and non-AI jobs postings based on the features used. Clusters are primarily separated by job titles, a strong indicator of whether a job is AI-related. Industry classification and experience level also play a role in distinguishing between the two types of job postings. The process, while not definitive, provides insights into the characteristics that differentiate AI-related jobs postings from non-AI ones in the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Extract PCA loadings matrix</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>loadings_matrix <span class="op">=</span> pca_model.pc.toArray()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Create Pandas DataFrame for loadings</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>loading_scores <span class="op">=</span> pd.DataFrame(loadings_matrix, columns<span class="op">=</span>[<span class="ss">f"PCA</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(no_of_components)])</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>loading_scores[<span class="st">"Variable"</span>] <span class="op">=</span> features_list</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder columns for readability</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>loading_scores <span class="op">=</span> loading_scores[[<span class="st">"Variable"</span>] <span class="op">+</span> [<span class="ss">f"PCA</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(no_of_components)]]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 6: Print loadings</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loading_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, when, lower</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> DoubleType</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml <span class="im">import</span> Pipeline</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.feature <span class="im">import</span> StringIndexer, VectorAssembler</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.classification <span class="im">import</span> LogisticRegression</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.ml.evaluation <span class="im">import</span> BinaryClassificationEvaluator</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># drop unnecessary columns</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [<span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>, <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>, <span class="st">"SOC_2"</span>, <span class="st">"SOC_3"</span>, <span class="st">"SOC_5"</span>]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(<span class="op">*</span>columns_to_drop)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># filter for non-null critical columns</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.<span class="bu">filter</span>((col(<span class="st">"TITLE_RAW"</span>).isNotNull()) <span class="op">&amp;</span> (col(<span class="st">"NAICS_2022_6"</span>).isNotNull()) <span class="op">&amp;</span> (col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).isNotNull()) <span class="op">&amp;</span> (col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).isNotNull()))</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># convert experience columns and create average</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MIN_YEARS_EXPERIENCE"</span>, col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).cast(DoubleType()))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"MAX_YEARS_EXPERIENCE"</span>, col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>).cast(DoubleType()))</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"AVG_YEARS_EXPERIENCE"</span>, (col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>) <span class="op">+</span> col(<span class="st">"MAX_YEARS_EXPERIENCE"</span>)) <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co"># create ai role indicator</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>ai_keywords <span class="op">=</span> [<span class="st">"ai"</span>, <span class="st">"artificial intelligence"</span>, <span class="st">"machine learning"</span>, <span class="st">"deep learning"</span>, <span class="st">"neural network"</span>, <span class="st">"nlp"</span>, <span class="st">"computer vision"</span>, <span class="st">"chatgpt"</span>, <span class="st">"gpt-3"</span>, <span class="st">"gpt-4"</span>, <span class="st">"llm"</span>, <span class="st">"large language model"</span>]</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"TITLE_LOWER"</span>, lower(col(<span class="st">"TITLE_RAW"</span>)))</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>ai_condition <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> keyword <span class="kw">in</span> ai_keywords:</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    condition <span class="op">=</span> col(<span class="st">"TITLE_LOWER"</span>).contains(keyword)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    ai_condition <span class="op">=</span> condition <span class="cf">if</span> ai_condition <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> ai_condition <span class="op">|</span> condition</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"IS_AI_ROLE"</span>, when(ai_condition, <span class="dv">1</span>).otherwise(<span class="dv">0</span>))</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co"># add class weights for imbalance</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>num_total <span class="op">=</span> df.count()</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>num_ai <span class="op">=</span> df.<span class="bu">filter</span>(col(<span class="st">"IS_AI_ROLE"</span>) <span class="op">==</span> <span class="dv">1</span>).count()</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>num_non_ai <span class="op">=</span> num_total <span class="op">-</span> num_ai</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>weight_ai <span class="op">=</span> num_total <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> num_ai)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>weight_non_ai <span class="op">=</span> num_total <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> num_non_ai)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"classWeightCol"</span>, when(col(<span class="st">"IS_AI_ROLE"</span>) <span class="op">==</span> <span class="dv">1</span>, weight_ai).otherwise(weight_non_ai))</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co"># encode categorical column</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>naics_indexer <span class="op">=</span> StringIndexer(inputCol<span class="op">=</span><span class="st">"NAICS_2022_6"</span>, outputCol<span class="op">=</span><span class="st">"NAICS_ENCODED"</span>, handleInvalid<span class="op">=</span><span class="st">"keep"</span>)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="co"># assemble features</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>assembler <span class="op">=</span> VectorAssembler(inputCols<span class="op">=</span>[<span class="st">"NAICS_ENCODED"</span>, <span class="st">"AVG_YEARS_EXPERIENCE"</span>], outputCol<span class="op">=</span><span class="st">"features"</span>)</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="co"># logistic regression with class weights</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> LogisticRegression(featuresCol<span class="op">=</span><span class="st">"features"</span>, labelCol<span class="op">=</span><span class="st">"IS_AI_ROLE"</span>, weightCol<span class="op">=</span><span class="st">"classWeightCol"</span>, maxIter<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="co"># build pipeline</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline(stages<span class="op">=</span>[naics_indexer, assembler, lr])</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="co"># split data into train and test</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>train_df, test_df <span class="op">=</span> df.randomSplit([<span class="fl">0.8</span>, <span class="fl">0.2</span>], seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> pipeline.fit(train_df)</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="co"># make predictions</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> model.transform(test_df)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>predictions.select(<span class="st">"IS_AI_ROLE"</span>, <span class="st">"prediction"</span>, <span class="st">"probability"</span>).show(<span class="dv">5</span>)</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate roc auc</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>roc_evaluator <span class="op">=</span> BinaryClassificationEvaluator(labelCol<span class="op">=</span><span class="st">"IS_AI_ROLE"</span>, rawPredictionCol<span class="op">=</span><span class="st">"rawPrediction"</span>, metricName<span class="op">=</span><span class="st">"areaUnderROC"</span>)</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>roc_auc <span class="op">=</span> roc_evaluator.evaluate(predictions)</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"roc auc: </span><span class="sc">{</span>roc_auc<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate accuracy</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> predictions.<span class="bu">filter</span>(predictions.IS_AI_ROLE <span class="op">==</span> predictions.prediction).count() <span class="op">/</span> predictions.count()</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"accuracy: </span><span class="sc">{</span>accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate precision, recall, f1</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>tp <span class="op">=</span> predictions.<span class="bu">filter</span>((col(<span class="st">"IS_AI_ROLE"</span>) <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (col(<span class="st">"prediction"</span>) <span class="op">==</span> <span class="dv">1</span>)).count()</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> predictions.<span class="bu">filter</span>((col(<span class="st">"IS_AI_ROLE"</span>) <span class="op">==</span> <span class="dv">0</span>) <span class="op">&amp;</span> (col(<span class="st">"prediction"</span>) <span class="op">==</span> <span class="dv">1</span>)).count()</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>fn <span class="op">=</span> predictions.<span class="bu">filter</span>((col(<span class="st">"IS_AI_ROLE"</span>) <span class="op">==</span> <span class="dv">1</span>) <span class="op">&amp;</span> (col(<span class="st">"prediction"</span>) <span class="op">==</span> <span class="dv">0</span>)).count()</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>precision <span class="op">=</span> tp <span class="op">/</span> (tp <span class="op">+</span> fp) <span class="cf">if</span> tp <span class="op">+</span> fp <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>recall <span class="op">=</span> tp <span class="op">/</span> (tp <span class="op">+</span> fn) <span class="cf">if</span> tp <span class="op">+</span> fn <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> (precision <span class="op">*</span> recall) <span class="op">/</span> (precision <span class="op">+</span> recall) <span class="cf">if</span> precision <span class="op">+</span> recall <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"precision: </span><span class="sc">{</span>precision<span class="sc">}</span><span class="ss">, recall: </span><span class="sc">{</span>recall<span class="sc">}</span><span class="ss">, f1 score: </span><span class="sc">{</span>f1<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="the-logistic-regression-model" class="level1">
+<h1>The Logistic Regression Model</h1>
+<p>The logistic regression model for predicting AI-related jobs was trained on a dataset with a highly imbalanced target variable, where AI jobs are much less frequent than non-AI jobs. The features used in this iteration were <code>NAICS_2022_6</code> (encoded as categorical) and <code>AVG_YEARS_EXPERIENCE</code> (numeric), while other potentially predictive features such as salary or job title information were not included. After implementing class weighting to address the imbalance, the model achieved a ROC AUC of 0.62, indicating modest discriminative ability between AI and non-AI jobs. Overall accuracy was 0.64, which is lower than the unweighted model but reflects that the model now predicts some AI jobs instead of defaulting to non-AI. Precision was very low at 0.029, meaning that most predicted AI jobs are actually non-AI, while recall was 0.515, showing that the model correctly identifies about half of the actual AI jobs. The F1 score was 0.055, reflecting the low precision despite the improved recall.</p>
+<p>The model’s main strength lies in its ability to recognize minority class instances, which was previously ignored in the unweighted version where precision, recall, and F1 were zero. However, the model has several limitations. Precision remains low, the features used are limited, and the overall ROC AUC suggests only moderate separation between classes. Potential improvements include incorporating additional features such as <code>AVG_SALARY</code>, <code>MIN_YEARS_EXPERIENCE</code>, and engineered job title features to capture more predictive information. Alternative classifiers like Random Forest, Gradient Boosted Trees, or XGBoost may better handle imbalance and capture non-linear patterns. Threshold tuning and sampling techniques such as oversampling AI jobs or undersampling non-AI jobs could further improve performance. Overall, the class-weighted logistic regression demonstrates progress in identifying AI jobs, particularly in improving recall, but additional features and modeling strategies are needed to increase precision and achieve a more balanced and reliable classification.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
