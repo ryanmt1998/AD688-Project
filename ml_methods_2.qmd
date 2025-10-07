@@ -142,7 +142,7 @@ We will be using the following features for our clustering model:
 - Average Years of Experience, expected to capture experience level differences
 
 
-Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings.
+Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings. 
 
 
 | IS_AI_ROLE | CLUSTER | count |
@@ -151,6 +151,8 @@ Grouping these features in a cluster of 2, we found a silhouette score of approx
 | 1          | 1       | 19    |
 | 0          | 0       | 2195  |
 | 0          | 1       | 1669  |
+
+The table shows the count of jobs by AI role and cluster. There are 66 AI - Labeled jobs total. Non - AI jobs are more numerous, with 3,864 present in the data set.
 
 
 ```{python echo=false}

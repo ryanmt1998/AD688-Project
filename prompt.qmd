@@ -1,0 +1,20 @@
+---
+title: "Introduction and Research Rationale"
+format:
+    html:
+        toc: true
+        number-sections: true
+        df-print: paged
+execute:
+    echo: false
+---
+
+# Introduction
+
+Artificial Intelligence (AI) is rapidly transforming the global labor market, reshaping how work is performed across a wide range of industries. As AI technologies automate specific tasks and enhance human capabilities, questions emerge around how they create new opportunities and disrupt career paths. To answer this increasingly prevalent question, understanding the evolving landscape of AI versus non-AI careers is essential for employees and policymakers navigating this evolving landscape. Together, Ryan and Tracy's research and analysis aim to explore how AI impacts job security, its presence in 2024, and its potential evolution in the future.
+
+# Research Rationale
+
+The ongoing integration of artificial intelligence (AI) into the workplace presents complex implications for the future of employment. As AI continues to develop, it influences which jobs potentially exist in the future and how work will be structured. This makes it crucial to research the broader effects of AI beyond immediate automation concerns.
+
+In 2024, the adoption of AI is still uneven, and its impact may not yet be fully visible in many datasets. By investigating and researching trends and early signs of influence, this study aims to provide a foundation that can guide strategies for future employment practices. Research of reputable information is key to unpacking how leading figures intend to explain and facilitate a smooth transition into an AI world.

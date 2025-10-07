@@ -1,7 +1,5 @@
 ---
-title: "Ryan Martin and Tracy Anyasi"
+title: "Analysis of AI vs. Non-AI Careers by Ryan Martin and Tracy Anyasi"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This is an analysis of the rapidly transforming job market and the growing influence of artificial intelligence. 
