@@ -2,4 +2,8 @@
 title: "Analysis of AI vs. Non-AI Careers by Ryan Martin and Tracy Anyasi"
 ---
 
+<div style="text-align: center;">
+<img src="/figures/AI-job-search.png" alt="AI job search" style="width: 70%; max-width: 700px;" />
+</div>
+
 This is an analysis of the rapidly transforming job market and the growing influence of artificial intelligence. 
