@@ -14,7 +14,7 @@ execute:
 # Unsupervised Clustering
 
 
-As a group, we will be implementing an unsupervised clustering model using the K-mean algorithm. We are seeking to differentiate AI-related jobs postings from non-AI ones. AI-related job postings will be defined by AI-related keywords. The results will serve to tell us how how certain features separate AI-related job postings from non-AI.
+As a group, Ryan and Tracy will be implementing an unsupervised clustering model using the K-mean algorithm. They are seeking to differentiate AI-related jobs postings from non-AI ones. AI-related job postings will be defined by AI-related keywords. The results will serve to tell them how how certain features separate AI-related job postings from non-AI.
 
 
 ```{python echo=false}
@@ -136,7 +136,7 @@ As a group, we will be implementing an unsupervised clustering model using the K
 # Features and Silhouette Score
 
 
-We will be using the following features for our clustering model:
+They will be using the following features for our clustering model:
 
 
 - Average Salary, expected to capture pay differences
@@ -145,7 +145,7 @@ We will be using the following features for our clustering model:
 - Average Years of Experience, expected to capture experience level differences
 
 
-Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings.
+Grouping these features in a cluster of 2, they found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings.
 
 
 | IS_AI_ROLE | CLUSTER | count |
@@ -357,7 +357,7 @@ Loading the data set, PC1 is entirely dominated by TITLE_ENCODED, with a coeffic
 # Differences Between AI and Non-AI Job Postings Using K-Means Clustering
 
 
-Using K-means clustering, we identified two clusters in our dataset through a series of processes including selecting features, calculating a silhouette score, and visualizing the data using PCA 2D plots. Although this is an unsupervised learning method, the clusters likely correspond to AI-related and non-AI jobs postings based on the features used. Clusters are primarily separated by job titles, a strong indicator of whether a job is AI-related. Industry classification and experience level also play a role in distinguishing between the two types of job postings. The process, while not definitive, provides insights into the characteristics that differentiate AI-related jobs postings from non-AI ones in the dataset.
+Using K-means clustering, they identified two clusters in their dataset through a series of processes including selecting features, calculating a silhouette score, and visualizing the data using PCA 2D plots. Although this is an unsupervised learning method, the clusters likely correspond to AI-related and non-AI jobs postings based on the features used. Clusters are primarily separated by job titles, a strong indicator of whether a job is AI-related. Industry classification and experience level also play a role in distinguishing between the two types of job postings. The process, while not definitive, provides insights into the characteristics that differentiate AI-related jobs postings from non-AI ones in the dataset.
 
 # A Table Displaying AI Related Jobs
 
@@ -600,7 +600,7 @@ The above table presents a case where experienced, or in other words, highly ski
 | Recall     | 0.5152                   |
 | F1 Score   | 0.0549                   |
 
-We assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and we applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, we deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.
+They assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and they applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, they deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.
 
 # Decision Tree Classifier
 
@@ -609,12 +609,12 @@ We assessed the relationship between job characteristics and the likelihood of a
 | ROC AUC    | 0.4832                   |
 | Accuracy   | 0.9765                   |
 
-We then developed a decision tree classifier to better understand the factors that differentiate AI-related roles from non-AI ones. The tree achieved a high accuracy of about 97%, but its ROC AUC of 0.48 revealed that it primarily predicted the majority (non-AI) class correctly and struggled to identify minority AI postings. From the splits, we deduced that industry classification was the strongest predictor, consistently appearing near the root, while experience acted as a secondary factor. This suggests that whether a job is AI-related depends first on the industry and then on the required level of expertise. The results also highlighted the strong imbalance in AI postings, with only a few sectors consistently containing these roles.
+Ryan and Tracy then developed a decision tree classifier to better understand the factors that differentiate AI-related roles from non-AI ones. The tree achieved a high accuracy of about 97%, but its ROC AUC of 0.48 revealed that it primarily predicted the majority (non-AI) class correctly and struggled to identify minority AI postings. From the splits, they deduced that industry classification was the strongest predictor, consistently appearing near the root, while experience acted as a secondary factor. This suggests that whether a job is AI-related depends first on the industry and then on the required level of expertise. The results also highlighted the strong imbalance in AI postings, with only a few sectors consistently containing these roles.
 
 
 # Decision Tree Visualization
 
-![Decision Tree Visualization](figures/decisiontree.png)
+![](figures/decisiontree.png)
 
 
-Finally, we visualized the tree using Matplotlib to interpret the model’s decision logic. The first split on industry demonstrated that most sectors contained predominantly non-AI jobs. Subsequent splits based on years of experience showed that AI-related postings cluster mainly in technology- or data-driven sectors, particularly for positions requiring moderate-to-high experience. Most terminal nodes predicted non-AI roles, reinforcing that AI positions are still a niche subset of the job market. Overall, the visualization confirmed our earlier deduction: AI job prevalence is concentrated in a few industries, and while experience plays a supporting role, industry type is the dominant factor in identifying AI-focused roles.
+Finally, they visualized the tree using Matplotlib to interpret the model’s decision logic. The first split on industry demonstrated that most sectors contained predominantly non-AI jobs. Subsequent splits based on years of experience showed that AI-related postings cluster mainly in technology- or data-driven sectors, particularly for positions requiring moderate-to-high experience. Most terminal nodes predicted non-AI roles, reinforcing that AI positions are still a niche subset of the job market. Overall, the visualization confirmed our earlier deduction: AI job prevalence is concentrated in a few industries, and while experience plays a supporting role, industry type is the dominant factor in identifying AI-focused roles.
