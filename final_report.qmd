@@ -169,10 +169,7 @@ With the removal of older NAICS and SOC codes, our dataset now retains only the 
 
 ## Job Postings by Industry
 
-```{=html}
-<iframe src="figures/top_20_job_postings_by_industry.html" width="800" height="600" frameborder="0"></iframe>
-
-```
+![](figures/top_20_job_postings_by_industry.html)
 
 The number of jobs an industry posts is indicative of its growth, the need for new talent, and an increase in goals. Such values help improve the industry's attractiveness to students, career changers, and other industries looking to collaborate.
 
@@ -182,10 +179,7 @@ The remaining industries comprise a significantly smaller number of postings, in
 
 ## Salary Distribution by Industry
 
-```{=html}
-<iframe src="figures/Salary_Distribution_by_Industry.html" width="900" height="600" frameborder="0"></iframe>
-```
-
+![](figures/Salary_Distribution_by_Industry.html)
 
 As salary is a strong determining factor in people's choice of career and deciding between industries, it is essential to evaluate how 20 industries, as published by NAICS, compensate their talent across the board. Some industries, such as Software Publishers, Administrative Management and General Management Consulting Services, and Web Search Portals and All Other Information Services, display wide salary spreads, indicated by tall boxes in the plot. These industries also have significantly high-salary outliers, with salaries reaching almost $500k.
 
@@ -195,9 +189,7 @@ Overall, this distribution highlights how industry choice can also impact earnin
 
 ## Remote vs. On-Site Jobs
 
-```{=html}
-<iframe src="figures/remote_vs_On_site.html" width="900" height="600" frameborder="0"></iframe>
-```
+![](figures/remote_vs_On_site.html)
 
 Following 2020, there has been a significant increase in the need for work-life balance. This priority was heavily influenced by remote work, which helped maintain industries during the COVID-19 lockdown mandates. However, as society moves past the time of quarantine, it is becoming a prevalent question whether this multitude of remote jobs, which offer flexibility, will be carried forward into the future.
 
