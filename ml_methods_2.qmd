@@ -603,4 +603,7 @@ We then developed a decision tree classifier to better understand the factors th
 
 # Decision Tree Visualization
 
+![Decision Tree Visualization](figures/decisiontree.png)
+
+
 Finally, we visualized the tree using Matplotlib to interpret the model’s decision logic. The first split on industry demonstrated that most sectors contained predominantly non-AI jobs. Subsequent splits based on years of experience showed that AI-related postings cluster mainly in technology- or data-driven sectors, particularly for positions requiring moderate-to-high experience. Most terminal nodes predicted non-AI roles, reinforcing that AI positions are still a niche subset of the job market. Overall, the visualization confirmed our earlier deduction: AI job prevalence is concentrated in a few industries, and while experience plays a supporting role, industry type is the dominant factor in identifying AI-focused roles.
