@@ -424,131 +424,88 @@ The above table presents a case where experienced, or in other words, highly ski
 
 
 ```{python echo=false}
-
-
-
-
-#from pyspark.sql import SparkSession
-#from pyspark.sql.functions import col, when, lower
-#from pyspark.sql.types import DoubleType
-#from pyspark.ml import Pipeline
-#from pyspark.ml.feature import StringIndexer, VectorAssembler
-#from pyspark.ml.classification import LogisticRegression
-#from pyspark.ml.evaluation import BinaryClassificationEvaluator
-
-
-
-
-# drop unnecessary columns
-#columns_to_drop = ["ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP", "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6", "SOC_2", "SOC_3", "SOC_5"]
-#df = df.drop(*columns_to_drop)
-
-
-
-
-# filter for non-null critical columns
-#df = df.filter((col("TITLE_RAW").isNotNull()) & (col("NAICS_2022_6").isNotNull()) & (col("MIN_YEARS_EXPERIENCE").isNotNull()) & (col("MAX_YEARS_EXPERIENCE").isNotNull()))
-
-
-
-
-# convert experience columns and create average
-#df = df.withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast(DoubleType()))
-#df = df.withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast(DoubleType()))
-#df = df.withColumn("AVG_YEARS_EXPERIENCE", (col("MIN_YEARS_EXPERIENCE") + col("MAX_YEARS_EXPERIENCE")) / 2)
-
-
-
-
-# create ai role indicator
-#ai_keywords = ["ai", "artificial intelligence", "machine learning", "deep learning", "neural network", "nlp", "computer vision", "chatgpt", "gpt-3", "gpt-4", "llm", "large language model"]
-#df = df.withColumn("TITLE_LOWER", lower(col("TITLE_RAW")))
-#ai_condition = None
-#for keyword in ai_keywords:
-#    condition = col("TITLE_LOWER").contains(keyword)
-#    ai_condition = condition if ai_condition is None else ai_condition | condition
-#df = df.withColumn("IS_AI_ROLE", when(ai_condition, 1).otherwise(0))
-
-
-
-
-# add class weights for imbalance
-#num_total = df.count()
-#num_ai = df.filter(col("IS_AI_ROLE") == 1).count()
-#num_non_ai = num_total - num_ai
-#weight_ai = num_total / (2 * num_ai)
-#weight_non_ai = num_total / (2 * num_non_ai)
-#df = df.withColumn("classWeightCol", when(col("IS_AI_ROLE") == 1, weight_ai).otherwise(weight_non_ai))
-
-
-
-
-# encode categorical column
-#naics_indexer = StringIndexer(inputCol="NAICS_2022_6", outputCol="NAICS_ENCODED", handleInvalid="keep")
-
-
-
-
-# assemble features
-#assembler = VectorAssembler(inputCols=["NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"], outputCol="features")
-
-
-
-
-# logistic regression with class weights
-#lr = LogisticRegression(featuresCol="features", labelCol="IS_AI_ROLE", weightCol="classWeightCol", maxIter=20)
-
-
-
-
-# build pipeline
-#pipeline = Pipeline(stages=[naics_indexer, assembler, lr])
-
-
-
-
-# split data into train and test
-#train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
-
-
-
-
-# fit model
-#model = pipeline.fit(train_df)
-
-
-
-
-# make predictions
-#predictions = model.transform(test_df)
-#predictions.select("IS_AI_ROLE", "prediction", "probability").show(5)
-
-
-
-
-# evaluate roc auc
-#roc_evaluator = BinaryClassificationEvaluator(labelCol="IS_AI_ROLE", rawPredictionCol="rawPrediction", metricName="areaUnderROC")
-#roc_auc = roc_evaluator.evaluate(predictions)
-#print(f"roc auc: {roc_auc}")
-
-
-
-
-# evaluate accuracy
-#accuracy = predictions.filter(predictions.IS_AI_ROLE == predictions.prediction).count() / predictions.count()
-#print(f"accuracy: {accuracy}")
-
-
-
-
-# evaluate precision, recall, f1
-#tp = predictions.filter((col("IS_AI_ROLE") == 1) & (col("prediction") == 1)).count()
-#fp = predictions.filter((col("IS_AI_ROLE") == 0) & (col("prediction") == 1)).count()
-#fn = predictions.filter((col("IS_AI_ROLE") == 1) & (col("prediction") == 0)).count()
-#precision = tp / (tp + fp) if tp + fp > 0 else 0
-#recall = tp / (tp + fn) if tp + fn > 0 else 0
-#f1 = 2 * (precision * recall) / (precision + recall) if precision + recall > 0 else 0
-#print(f"precision: {precision}, recall: {recall}, f1 score: {f1}")
+# from pyspark.sql import SparkSession
+# from pyspark.sql.functions import col, when, lower
+# from pyspark.sql.types import DoubleType
+# from pyspark.ml import Pipeline
+# from pyspark.ml.feature import StringIndexer, VectorAssembler
+# from pyspark.ml.classification import LogisticRegression
+# from pyspark.ml.evaluation import BinaryClassificationEvaluator
+
+# # initialize spark session
+# spark = SparkSession.builder.appName("ai_job_classification_weighted").config("spark.driver.memory", "4g").getOrCreate()
+
+# # load dataset
+# df = spark.read.option("header", "true").option("inferSchema", "true").option("multiLine", "true").option("escape", "\"").csv("./lightcast_job_postings.csv")
+
+# # drop unnecessary columns
+# columns_to_drop = ["ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP", "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6", "SOC_2", "SOC_3", "SOC_5"]
+# df = df.drop(*columns_to_drop)
+
+# # filter for non-null critical columns
+# df = df.filter((col("TITLE_RAW").isNotNull()) & (col("NAICS_2022_6").isNotNull()) & (col("MIN_YEARS_EXPERIENCE").isNotNull()) & (col("MAX_YEARS_EXPERIENCE").isNotNull()))
+
+# # convert experience columns and create average
+# df = df.withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast(DoubleType()))
+# df = df.withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast(DoubleType()))
+# df = df.withColumn("AVG_YEARS_EXPERIENCE", (col("MIN_YEARS_EXPERIENCE") + col("MAX_YEARS_EXPERIENCE")) / 2)
+
+# # create ai role indicator
+# ai_keywords = ["ai", "artificial intelligence", "machine learning", "deep learning", "neural network", "nlp", "computer vision", "chatgpt", "gpt-3", "gpt-4", "llm", "large language model"]
+# df = df.withColumn("TITLE_LOWER", lower(col("TITLE_RAW")))
+# ai_condition = None
+# for keyword in ai_keywords:
+#     condition = col("TITLE_LOWER").contains(keyword)
+#     ai_condition = condition if ai_condition is None else ai_condition | condition
+# df = df.withColumn("IS_AI_ROLE", when(ai_condition, 1).otherwise(0))
+
+# # add class weights for imbalance
+# num_total = df.count()
+# num_ai = df.filter(col("IS_AI_ROLE") == 1).count()
+# num_non_ai = num_total - num_ai
+# weight_ai = num_total / (2 * num_ai)
+# weight_non_ai = num_total / (2 * num_non_ai)
+# df = df.withColumn("classWeightCol", when(col("IS_AI_ROLE") == 1, weight_ai).otherwise(weight_non_ai))
+
+# # encode categorical column
+# naics_indexer = StringIndexer(inputCol="NAICS_2022_6", outputCol="NAICS_ENCODED", handleInvalid="keep")
+
+# # assemble features
+# assembler = VectorAssembler(inputCols=["NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"], outputCol="features")
+
+# # logistic regression with class weights
+# lr = LogisticRegression(featuresCol="features", labelCol="IS_AI_ROLE", weightCol="classWeightCol", maxIter=20)
+
+# # build pipeline
+# pipeline = Pipeline(stages=[naics_indexer, assembler, lr])
+
+# # split data into train and test
+# train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
+
+# # fit model
+# model = pipeline.fit(train_df)
+
+# # make predictions
+# predictions = model.transform(test_df)
+# predictions.select("IS_AI_ROLE", "prediction", "probability").show(5)
+
+# # evaluate roc auc
+# roc_evaluator = BinaryClassificationEvaluator(labelCol="IS_AI_ROLE", rawPredictionCol="rawPrediction", metricName="areaUnderROC")
+# roc_auc = roc_evaluator.evaluate(predictions)
+# print(f"roc auc: {roc_auc}")
+
+# # evaluate accuracy
+# accuracy = predictions.filter(predictions.IS_AI_ROLE == predictions.prediction).count() / predictions.count()
+# print(f"accuracy: {accuracy}")
+
+# # evaluate precision, recall, f1
+# tp = predictions.filter((col("IS_AI_ROLE") == 1) & (col("prediction") == 1)).count()
+# fp = predictions.filter((col("IS_AI_ROLE") == 0) & (col("prediction") == 1)).count()
+# fn = predictions.filter((col("IS_AI_ROLE") == 1) & (col("prediction") == 0)).count()
+# precision = tp / (tp + fp) if tp + fp > 0 else 0
+# recall = tp / (tp + fn) if tp + fn > 0 else 0
+# f1 = 2 * (precision * recall) / (precision + recall) if precision + recall > 0 else 0
+# print(f"precision: {precision}, recall: {recall}, f1 score: {f1}")
 ```
 
 
