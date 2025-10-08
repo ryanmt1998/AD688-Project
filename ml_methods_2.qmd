@@ -26,7 +26,7 @@ As a group, we will be implementing an unsupervised clustering model using the K
 #from pyspark.ml import Pipeline
 #from pyspark.ml.evaluation import ClusteringEvaluator
 #from pyspark.sql import SparkSession
-## Load the Lightcast Job Posting Data
+# Load the Lightcast Job Posting Data
 #spark = SparkSession.builder \
 #.appName("AI_vs_NonAI_JobPostings") \
 #.config("spark.driver.memory", "4g") \
@@ -41,30 +41,31 @@ As a group, we will be implementing an unsupervised clustering model using the K
 #    .option("escape", "\"") \
 #    .csv("./data/lightcast_job_postings.csv")
 ```
+
 ```{python echo=false}
 # Drop unnecessary columns
 #columns_to_drop = [
-#    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
-#    "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
-#    "SOC_2", "SOC_3", "SOC_5"
+#"ID", "URL", "ACTIVE_URLS", "DUPLICATES", #"LAST_UPDATED_TIMESTAMP",
+#"NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
+#"SOC_2", "SOC_3", "SOC_5"
 #]
 #df = df.drop(*columns_to_drop)
 
 
 # Filter rows with non-null salary and classification columns
 #df = df.filter(
-#    (col("SALARY_FROM").isNotNull()) &
-#    (col("SALARY_TO").isNotNull()) &
-#    (col("TITLE_RAW").isNotNull()) &
-#    (col("NAICS_2022_6").isNotNull()) &
-#    (col("MIN_YEARS_EXPERIENCE").isNotNull()) &
-#    (col("MAX_YEARS_EXPERIENCE").isNotNull())
+#(col("SALARY_FROM").isNotNull()) &
+#(col("SALARY_TO").isNotNull()) &
+#(col("TITLE_RAW").isNotNull()) &
+#(col("NAICS_2022_6").isNotNull()) &
+#(col("MIN_YEARS_EXPERIENCE").isNotNull()) &
+#(col("MAX_YEARS_EXPERIENCE").isNotNull())
 #)
 
 
 # Convert salary columns to numeric
 #df = df.withColumn("SALARY_FROM", col("SALARY_FROM").cast(DoubleType()))
-#df = df.withColumn("SALARY_TO", col("SALARY_TO").cast(DoubleType()))
+#df = df.withColumn("SALARY_TO", col("SALARY_TO").cast(DoubleType#()))
 
 
 # Create average salary column
@@ -87,9 +88,9 @@ As a group, we will be implementing an unsupervised clustering model using the K
 
 # List of AI keywords
 #ai_keywords = [
-#    "ai", "artificial intelligence", "machine learning", "deep learning",
-#    "neural network", "nlp", "computer vision", "chatgpt", "gpt-3", "gpt-4",
-#    "llm", "large language model"
+#"ai", "artificial intelligence", "machine learning", "deep learning",
+#"neural network", "nlp", "computer vision", "chatgpt", "gpt-3", "gpt-4",
+#"llm", "large language model"
 #]
 
 
@@ -107,22 +108,24 @@ As a group, we will be implementing an unsupervised clustering model using the K
 #df = df.withColumn("IS_AI_ROLE", when(ai_condition, 1).otherwise(0))
 ```
 ```{python echo=false}
-
-
+#from pyspark.ml.feature import StringIndexer
+#from pyspark.ml.feature import VectorAssembler
+#from pyspark.ml.clustering import KMeans
+#from pyspark.ml import Pipeline
 
 
 # Define pipeline stages
 #title_indexer = StringIndexer(inputCol="TITLE_RAW", outputCol="TITLE_ENCODED", handleInvalid="keep")
 #naics_indexer = StringIndexer(inputCol="NAICS_2022_6", outputCol="NAICS_ENCODED", handleInvalid="keep")
 #assembler = VectorAssembler(
-#    inputCols=["TITLE_ENCODED", "NAICS_ENCODED", "AVG_SALARY", "AVG_YEARS_EXPERIENCE"],
-#    outputCol="features"
+#inputCols=["TITLE_ENCODED", "NAICS_ENCODED", "AVG_SALARY", "AVG_YEARS_EXPERIENCE"],
+#outputCol="features"
 #)
 #kmeans = KMeans(featuresCol="features", predictionCol="CLUSTER", k=2, seed=42)
 
 
 # Create pipeline
-#pipeline = Pipeline(stages=[title_indexer, naics_indexer, assembler, kmeans])
+#pipeline = Pipeline(stages=[title_indexer, naics_indexer, #assembler, kmeans])
 
 
 # Fit pipeline
@@ -142,7 +145,7 @@ We will be using the following features for our clustering model:
 - Average Years of Experience, expected to capture experience level differences
 
 
-Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings. 
+Grouping these features in a cluster of 2, we found a silhouette score of approximately 0.695, indicating a good clustering structure. However, since the score is not closer to 1 than expected, reflecting the complexity between AI and non-AI job postings.
 
 
 | IS_AI_ROLE | CLUSTER | count |
@@ -155,7 +158,10 @@ Grouping these features in a cluster of 2, we found a silhouette score of approx
 The table shows the count of jobs by AI role and cluster. There are 66 AI - Labeled jobs total. Non - AI jobs are more numerous, with 3,864 present in the data set.
 
 
+
+
 ```{python echo=false}
+#from pyspark.ml.evaluation import ClusteringEvaluator
 # Transform data to get cluster predictions
 #predictions = model.transform(df)
 
@@ -194,7 +200,7 @@ It would be unusual to see any AI jobs since AI jobs are not common in the hirin
 
 # Sample 5% of the data to reduce size for plotting
 #sample_pdf = predictions.select(
-#    "AVG_SALARY", "TITLE_ENCODED", "NAICS_ENCODED", "AVG_YEARS_EXPERIENCE", "IS_AI_ROLE"
+#"AVG_SALARY", "TITLE_ENCODED", "NAICS_ENCODED", #"AVG_YEARS_EXPERIENCE", "IS_AI_ROLE"
 #).sample(fraction=0.05, seed=42).toPandas()
 
 
@@ -252,8 +258,8 @@ The results of the PCA plots indicate the there are now two visually distinct cl
 
 # Step 1: Assemble features excluding AVG_SALARY
 #assembler_no_salary = VectorAssembler(
-#    inputCols=["TITLE_ENCODED", "NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"],
-#    outputCol="features_no_salary"
+#inputCols=["TITLE_ENCODED", "NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"],
+#outputCol="features_no_salary"
 #)
 
 
@@ -278,7 +284,7 @@ The results of the PCA plots indicate the there are now two visually distinct cl
 
 # Step 4: Plotting and saving function
 #def plot_pcs_save(x, y, filename):
-#    sns.scatterplot(data=pdf_pca, x=x, y=y, hue="CLUSTER", palette="deep", alpha=0.6)
+#    sns.scatterplot(data=pdf_pca, x=x, y=y, hue="CLUSTER", #palette="deep", alpha=0.6)
 #    plt.title(f"PCA Scatter Plot: {x} vs {y}")
 #    plt.savefig(f"figures/{filename}")
 #    plt.close()
@@ -353,7 +359,36 @@ Loading the data set, PC1 is entirely dominated by TITLE_ENCODED, with a coeffic
 
 Using K-means clustering, we identified two clusters in our dataset through a series of processes including selecting features, calculating a silhouette score, and visualizing the data using PCA 2D plots. Although this is an unsupervised learning method, the clusters likely correspond to AI-related and non-AI jobs postings based on the features used. Clusters are primarily separated by job titles, a strong indicator of whether a job is AI-related. Industry classification and experience level also play a role in distinguishing between the two types of job postings. The process, while not definitive, provides insights into the characteristics that differentiate AI-related jobs postings from non-AI ones in the dataset.
 
+# A Table Displaying AI Related Jobs
 
+```
+[Stage 108:>                                                        (0 + 1) / 1]
++--------------------------------------------------------------------------+------------+----------+--------------------+
+|TITLE_RAW                                                                 |NAICS_2022_6|AVG_SALARY|AVG_YEARS_EXPERIENCE|
++--------------------------------------------------------------------------+------------+----------+--------------------+
+|Data / AI / ML Analyst - Full time / Onsite Venice, FL                    |424210      |77500.0   |2.0                 |
+|Senior AI Engineer                                                        |334111      |183250.0  |5.0                 |
+|Data Analyst - BI & AI                                                    |237310      |89500.0   |2.0                 |
+|Platform Architect - Analytics AI/ML (Remote)                             |221118      |168150.0  |8.0                 |
+|Government and Public Sector - AI & Data Analyst (TS/SCI Clearan NEW      |541211      |99850.0   |1.0                 |
+|Platform Architect - Analytics AI/ML (Remote)                             |221118      |168150.0  |8.0                 |
+|Data Analyst - Generative AI Specialist                                   |541512      |95000.0   |1.0                 |
+|Enterprise Ai/Ml Architect                                                |561311      |107500.0  |3.0                 |
+|Enterprise AI/ML Architect                                                |517121      |107500.0  |3.0                 |
+|Platform Architect - Analytics AI/ML (Remote)                             |221118      |168150.0  |8.0                 |
+|(USA) Senior, Data Analyst - Data Science and AI f...                     |455211      |117500.0  |3.0                 |
+|(USA) Senior, Data Analyst - Data Science and AI for Corporate Real Estate|455211      |117500.0  |3.0                 |
+|Enterprise AI/ML Architect                                                |517121      |107500.0  |3.0                 |
+|Data Analyst - Generative AI Specialist                                   |541512      |115000.0  |1.0                 |
+|Enterprise AI/ML Architect                                                |517121      |107500.0  |3.0                 |
+|Data Analyst - BI & AI                                                    |237310      |89500.0   |2.0                 |
+|Data Analyst - BI & AI                                                    |237310      |89500.0   |2.0                 |
+|SAP ABAP Consultant with GEN AI                                           |541511      |122501.5  |8.0                 |
++--------------------------------------------------------------------------+------------+----------+--------------------+
+
+
+```
+The above table presents a case where experienced, or in other words, highly skilled jobs meet the criteria for being deemed AI jobs. This table supports the idea that experienced positions are closely associated with AI, considering their complexity.
 
 
 ```{python echo=false}
@@ -376,11 +411,21 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #print(loading_scores)
 ```
 
+```{python echo=false}
+# Filter the DataFrame to get only AI jobs
+# Filter the DataFrame to get only AI jobs
+#ai_jobs_df = df.filter(col("IS_AI_ROLE") == 1)
+#ai_jobs_df.select("TITLE_RAW", "NAICS_2022_6", "AVG_SALARY", "AVG_YEARS_EXPERIENCE").show(truncate=False)
+```
 
 # Logistic Regression
 
 
+
+
 ```{python echo=false}
+
+
 
 
 #from pyspark.sql import SparkSession
@@ -392,19 +437,27 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
 
+
+
 # drop unnecessary columns
 #columns_to_drop = ["ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP", "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6", "SOC_2", "SOC_3", "SOC_5"]
 #df = df.drop(*columns_to_drop)
+
+
 
 
 # filter for non-null critical columns
 #df = df.filter((col("TITLE_RAW").isNotNull()) & (col("NAICS_2022_6").isNotNull()) & (col("MIN_YEARS_EXPERIENCE").isNotNull()) & (col("MAX_YEARS_EXPERIENCE").isNotNull()))
 
 
+
+
 # convert experience columns and create average
 #df = df.withColumn("MIN_YEARS_EXPERIENCE", col("MIN_YEARS_EXPERIENCE").cast(DoubleType()))
 #df = df.withColumn("MAX_YEARS_EXPERIENCE", col("MAX_YEARS_EXPERIENCE").cast(DoubleType()))
 #df = df.withColumn("AVG_YEARS_EXPERIENCE", (col("MIN_YEARS_EXPERIENCE") + col("MAX_YEARS_EXPERIENCE")) / 2)
+
+
 
 
 # create ai role indicator
@@ -417,6 +470,8 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #df = df.withColumn("IS_AI_ROLE", when(ai_condition, 1).otherwise(0))
 
 
+
+
 # add class weights for imbalance
 #num_total = df.count()
 #num_ai = df.filter(col("IS_AI_ROLE") == 1).count()
@@ -426,33 +481,49 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #df = df.withColumn("classWeightCol", when(col("IS_AI_ROLE") == 1, weight_ai).otherwise(weight_non_ai))
 
 
+
+
 # encode categorical column
 #naics_indexer = StringIndexer(inputCol="NAICS_2022_6", outputCol="NAICS_ENCODED", handleInvalid="keep")
+
+
 
 
 # assemble features
 #assembler = VectorAssembler(inputCols=["NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"], outputCol="features")
 
 
+
+
 # logistic regression with class weights
 #lr = LogisticRegression(featuresCol="features", labelCol="IS_AI_ROLE", weightCol="classWeightCol", maxIter=20)
+
+
 
 
 # build pipeline
 #pipeline = Pipeline(stages=[naics_indexer, assembler, lr])
 
 
+
+
 # split data into train and test
 #train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
+
+
 
 
 # fit model
 #model = pipeline.fit(train_df)
 
 
+
+
 # make predictions
 #predictions = model.transform(test_df)
 #predictions.select("IS_AI_ROLE", "prediction", "probability").show(5)
+
+
 
 
 # evaluate roc auc
@@ -461,9 +532,13 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 #print(f"roc auc: {roc_auc}")
 
 
+
+
 # evaluate accuracy
 #accuracy = predictions.filter(predictions.IS_AI_ROLE == predictions.prediction).count() / predictions.count()
 #print(f"accuracy: {accuracy}")
+
+
 
 
 # evaluate precision, recall, f1
@@ -477,7 +552,11 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 ```
 
 
+
+
 The logistic regression model for predicting AI-related jobs was trained on a dataset with a highly imbalanced target variable, where AI jobs are much less frequent than non-AI jobs. The features used in this iteration were `NAICS_2022_6` (encoded as categorical) and `AVG_YEARS_EXPERIENCE` (numeric), while other potentially predictive features such as salary or job title information were not included. After implementing class weighting to address the imbalance, the model achieved a ROC AUC of 0.62, indicating modest discriminative ability between AI and non-AI jobs. Overall accuracy was 0.64, which is lower than the unweighted model but reflects that the model now predicts some AI jobs instead of defaulting to non-AI. Precision was very low at 0.029, meaning that most predicted AI jobs are actually non-AI, while recall was 0.515, showing that the model correctly identifies about half of the actual AI jobs. The F1 score was 0.055, reflecting the low precision despite the improved recall.
+
+
 
 
 The model’s main strength lies in its ability to recognize minority class instances, which was previously ignored in the unweighted version where precision, recall, and F1 were zero. However, the model has several limitations. Precision remains low, the features used are limited, and the overall ROC AUC suggests only moderate separation between classes. Potential improvements include incorporating additional features such as `AVG_SALARY`, `MIN_YEARS_EXPERIENCE`, and engineered job title features to capture more predictive information. Alternative classifiers like Random Forest, Gradient Boosted Trees, or XGBoost may better handle imbalance and capture non-linear patterns. Threshold tuning and sampling techniques such as oversampling AI jobs or undersampling non-AI jobs could further improve performance. Overall, the class-weighted logistic regression demonstrates progress in identifying AI jobs, particularly in improving recall, but additional features and modeling strategies are needed to increase precision and achieve a more balanced and reliable classification.
