@@ -418,8 +418,6 @@ The above table presents a case where experienced, or in other words, highly ski
 #ai_jobs_df.select("TITLE_RAW", "NAICS_2022_6", "AVG_SALARY", "AVG_YEARS_EXPERIENCE").show(truncate=False)
 ```
 
-#Logistic Regression
-
 
 
 
