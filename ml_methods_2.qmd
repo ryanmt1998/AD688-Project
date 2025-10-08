@@ -548,13 +548,11 @@ The above table presents a case where experienced, or in other words, highly ski
 # from sklearn import tree
 # import pandas as pd
 
-# # === 1️⃣ Create simplified NAICS column BEFORE split ===
 # df = df.withColumn("NAICS_MAJOR", substring(col("NAICS_2022_6").cast("string"), 1, 2))
 
-# # === 2️⃣ Split data AFTER creating column ===
 # train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
 
-# # === 3️⃣ Build Decision Tree pipeline ===
+#decision tree pipeline
 # naics_indexer = StringIndexer(inputCol="NAICS_MAJOR", outputCol="NAICS_ENCODED", handleInvalid="keep")
 # assembler = VectorAssembler(inputCols=["NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"], outputCol="features")
 
@@ -568,18 +566,18 @@ The above table presents a case where experienced, or in other words, highly ski
 # dt_pipeline = Pipeline(stages=[naics_indexer, assembler, dt])
 # dt_model = dt_pipeline.fit(train_df)
 
-# # === 4️⃣ Convert to pandas sample for sklearn visualization ===
+#pandas visualization
 # sample_pd = train_df.select("NAICS_MAJOR", "AVG_YEARS_EXPERIENCE", "IS_AI_ROLE").limit(10000).toPandas()
 # sample_pd["NAICS_MAJOR"] = pd.factorize(sample_pd["NAICS_MAJOR"])[0]
 
 # X = sample_pd[["NAICS_MAJOR", "AVG_YEARS_EXPERIENCE"]]
 # y = sample_pd["IS_AI_ROLE"]
 
-# # === 5️⃣ Train sklearn version for visualization ===
+#trainin visualization
 # sk_tree = SkDecisionTree(max_depth=5, random_state=42)
 # sk_tree.fit(X, y)
 
-# # === 6️⃣ Plot using Matplotlib ===
+#plot tree
 # plt.figure(figsize=(18, 8))
 # tree.plot_tree(
 #     sk_tree,
