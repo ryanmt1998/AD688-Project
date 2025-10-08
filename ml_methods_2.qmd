@@ -592,6 +592,14 @@ The above table presents a case where experienced, or in other words, highly ski
 
 # Logistic Regression Analysis
 
+| Metric     | Value                    |
+|------------|--------------------------|
+| ROC AUC    | 0.6200                   |
+| Accuracy   | 0.6384                   |
+| Precision  | 0.0290                   |
+| Recall     | 0.5152                   |
+| F1 Score   | 0.0549                   |
+
 We assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and we applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, we deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.
 
 # Decision Tree Classifier
