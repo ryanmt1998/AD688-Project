@@ -537,6 +537,62 @@ The above table presents a case where experienced, or in other words, highly ski
 # print(dt_model.stages[-1].toDebugString)
 ```
 
+
+```{python echo=false}
+# import matplotlib.pyplot as plt
+# from pyspark.ml.classification import DecisionTreeClassifier
+# from pyspark.ml.feature import StringIndexer, VectorAssembler
+# from pyspark.ml import Pipeline
+# from pyspark.sql.functions import substring, col
+# from sklearn.tree import DecisionTreeClassifier as SkDecisionTree
+# from sklearn import tree
+# import pandas as pd
+
+# # === 1️⃣ Create simplified NAICS column BEFORE split ===
+# df = df.withColumn("NAICS_MAJOR", substring(col("NAICS_2022_6").cast("string"), 1, 2))
+
+# # === 2️⃣ Split data AFTER creating column ===
+# train_df, test_df = df.randomSplit([0.8, 0.2], seed=42)
+
+# # === 3️⃣ Build Decision Tree pipeline ===
+# naics_indexer = StringIndexer(inputCol="NAICS_MAJOR", outputCol="NAICS_ENCODED", handleInvalid="keep")
+# assembler = VectorAssembler(inputCols=["NAICS_ENCODED", "AVG_YEARS_EXPERIENCE"], outputCol="features")
+
+# dt = DecisionTreeClassifier(
+#     featuresCol="features",
+#     labelCol="IS_AI_ROLE",
+#     maxDepth=5,
+#     maxBins=1000
+# )
+
+# dt_pipeline = Pipeline(stages=[naics_indexer, assembler, dt])
+# dt_model = dt_pipeline.fit(train_df)
+
+# # === 4️⃣ Convert to pandas sample for sklearn visualization ===
+# sample_pd = train_df.select("NAICS_MAJOR", "AVG_YEARS_EXPERIENCE", "IS_AI_ROLE").limit(10000).toPandas()
+# sample_pd["NAICS_MAJOR"] = pd.factorize(sample_pd["NAICS_MAJOR"])[0]
+
+# X = sample_pd[["NAICS_MAJOR", "AVG_YEARS_EXPERIENCE"]]
+# y = sample_pd["IS_AI_ROLE"]
+
+# # === 5️⃣ Train sklearn version for visualization ===
+# sk_tree = SkDecisionTree(max_depth=5, random_state=42)
+# sk_tree.fit(X, y)
+
+# # === 6️⃣ Plot using Matplotlib ===
+# plt.figure(figsize=(18, 8))
+# tree.plot_tree(
+#     sk_tree,
+#     feature_names=["NAICS_MAJOR", "AVG_YEARS_EXPERIENCE"],
+#     class_names=["Non-AI", "AI"],
+#     filled=True,
+#     rounded=True,
+#     fontsize=10
+# )
+# plt.title("Decision Tree Visualization (Sampled from Spark Model)", fontsize=14)
+# plt.show()
+```
+
 The logistic regression model for predicting AI-related jobs was trained on a dataset with a highly imbalanced target variable, where AI jobs are much less frequent than non-AI jobs. The features used in this iteration were `NAICS_2022_6` (encoded as categorical) and `AVG_YEARS_EXPERIENCE` (numeric), while other potentially predictive features such as salary or job title information were not included. After implementing class weighting to address the imbalance, the model achieved a ROC AUC of 0.62, indicating modest discriminative ability between AI and non-AI jobs. Overall accuracy was 0.64, which is lower than the unweighted model but reflects that the model now predicts some AI jobs instead of defaulting to non-AI. Precision was very low at 0.029, meaning that most predicted AI jobs are actually non-AI, while recall was 0.515, showing that the model correctly identifies about half of the actual AI jobs. The F1 score was 0.055, reflecting the low precision despite the improved recall.
 
 
