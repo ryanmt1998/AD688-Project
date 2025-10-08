@@ -299,6 +299,36 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="logistic-regression-analysis" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Logistic Regression Analysis</h1>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ROC AUC</td>
+<td>0.6200</td>
+</tr>
+<tr class="even">
+<td>Accuracy</td>
+<td>0.6384</td>
+</tr>
+<tr class="odd">
+<td>Precision</td>
+<td>0.0290</td>
+</tr>
+<tr class="even">
+<td>Recall</td>
+<td>0.5152</td>
+</tr>
+<tr class="odd">
+<td>F1 Score</td>
+<td>0.0549</td>
+</tr>
+</tbody>
+</table>
 <p>We assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and we applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, we deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.</p>
 </section>
 <section id="decision-tree-classifier" class="level1" data-number="9">
