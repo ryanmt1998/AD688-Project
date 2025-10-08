@@ -418,7 +418,7 @@ The above table presents a case where experienced, or in other words, highly ski
 #ai_jobs_df.select("TITLE_RAW", "NAICS_2022_6", "AVG_SALARY", "AVG_YEARS_EXPERIENCE").show(truncate=False)
 ```
 
-# Logistic Regression
+#Logistic Regression
 
 
 
@@ -591,9 +591,7 @@ The above table presents a case where experienced, or in other words, highly ski
 # plt.show()
 ```
 
-The logistic regression model for predicting AI-related jobs was trained on a dataset with a highly imbalanced target variable, where AI jobs are much less frequent than non-AI jobs. The features used in this iteration were `NAICS_2022_6` (encoded as categorical) and `AVG_YEARS_EXPERIENCE` (numeric), while other potentially predictive features such as salary or job title information were not included. After implementing class weighting to address the imbalance, the model achieved a ROC AUC of 0.62, indicating modest discriminative ability between AI and non-AI jobs. Overall accuracy was 0.64, which is lower than the unweighted model but reflects that the model now predicts some AI jobs instead of defaulting to non-AI. Precision was very low at 0.029, meaning that most predicted AI jobs are actually non-AI, while recall was 0.515, showing that the model correctly identifies about half of the actual AI jobs. The F1 score was 0.055, reflecting the low precision despite the improved recall.
 
+# Logistic Regression Analysis
 
-
-
-The model’s main strength lies in its ability to recognize minority class instances, which was previously ignored in the unweighted version where precision, recall, and F1 were zero. However, the model has several limitations. Precision remains low, the features used are limited, and the overall ROC AUC suggests only moderate separation between classes. Potential improvements include incorporating additional features such as `AVG_SALARY`, `MIN_YEARS_EXPERIENCE`, and engineered job title features to capture more predictive information. Alternative classifiers like Random Forest, Gradient Boosted Trees, or XGBoost may better handle imbalance and capture non-linear patterns. Threshold tuning and sampling techniques such as oversampling AI jobs or undersampling non-AI jobs could further improve performance. Overall, the class-weighted logistic regression demonstrates progress in identifying AI jobs, particularly in improving recall, but additional features and modeling strategies are needed to increase precision and achieve a more balanced and reliable classification.
+We assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and we applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, we deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.
