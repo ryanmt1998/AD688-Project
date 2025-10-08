@@ -362,7 +362,7 @@ Using K-means clustering, we identified two clusters in our dataset through a se
 # A Table Displaying AI Related Jobs
 
 ```
-[Stage 108:>                                                        (0 + 1) / 1]
+
 +--------------------------------------------------------------------------+------------+----------+--------------------+
 |TITLE_RAW                                                                 |NAICS_2022_6|AVG_SALARY|AVG_YEARS_EXPERIENCE|
 +--------------------------------------------------------------------------+------------+----------+--------------------+
