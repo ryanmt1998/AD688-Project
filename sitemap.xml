@@ -2,34 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/prompt.html</loc>
-    <lastmod>2025-10-08T02:24:45.108Z</lastmod>
+    <lastmod>2025-10-08T19:03:52.993Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/missingno-0.5.2.dist-info/LICENSE.html</loc>
-    <lastmod>2025-10-08T02:24:51.030Z</lastmod>
+    <lastmod>2025-10-08T19:03:58.910Z</lastmod>
   </url>
   <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
-    <lastmod>2025-10-08T02:24:45.101Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
-    <lastmod>2025-10-08T02:24:45.032Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
-    <lastmod>2025-10-08T02:24:45.031Z</lastmod>
+    <loc>https://ryanmt1998.github.io/AD688-Project/final_report.html</loc>
+    <lastmod>2025-10-08T19:03:52.986Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/ml_methods_2.html</loc>
-    <lastmod>2025-10-08T02:24:45.101Z</lastmod>
+    <lastmod>2025-10-08T19:03:52.987Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/ai_vs_traditional.html</loc>
+    <lastmod>2025-10-08T19:03:52.947Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/data_analysis.html</loc>
+    <lastmod>2025-10-08T19:03:52.949Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ryanmt1998.github.io/AD688-Project/index.html</loc>
+    <lastmod>2025-10-08T19:03:52.986Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/skill_gap_analysis.html</loc>
-    <lastmod>2025-10-08T02:24:45.108Z</lastmod>
+    <lastmod>2025-10-08T19:03:52.993Z</lastmod>
   </url>
   <url>
     <loc>https://ryanmt1998.github.io/AD688-Project/venv_clean/lib/python3.12/site-packages/narwhals-2.4.0.dist-info/licenses/LICENSE.html</loc>
-    <lastmod>2025-10-08T02:24:51.037Z</lastmod>
+    <lastmod>2025-10-08T19:03:58.916Z</lastmod>
   </url>
 </urlset>
