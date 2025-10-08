@@ -599,3 +599,8 @@ We assessed the relationship between job characteristics and the likelihood of a
 # Decision Tree Classifier
 
 We then developed a decision tree classifier to better understand the factors that differentiate AI-related roles from non-AI ones. The tree achieved a high accuracy of about 97%, but its ROC AUC of 0.48 revealed that it primarily predicted the majority (non-AI) class correctly and struggled to identify minority AI postings. From the splits, we deduced that industry classification was the strongest predictor, consistently appearing near the root, while experience acted as a secondary factor. This suggests that whether a job is AI-related depends first on the industry and then on the required level of expertise. The results also highlighted the strong imbalance in AI postings, with only a few sectors consistently containing these roles.
+
+
+# Decision Tree Visualization
+
+Finally, we visualized the tree using Matplotlib to interpret the model’s decision logic. The first split on industry demonstrated that most sectors contained predominantly non-AI jobs. Subsequent splits based on years of experience showed that AI-related postings cluster mainly in technology- or data-driven sectors, particularly for positions requiring moderate-to-high experience. Most terminal nodes predicted non-AI roles, reinforcing that AI positions are still a niche subset of the job market. Overall, the visualization confirmed our earlier deduction: AI job prevalence is concentrated in a few industries, and while experience plays a supporting role, industry type is the dominant factor in identifying AI-focused roles.
