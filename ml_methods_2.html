@@ -140,6 +140,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#differences-between-ai-and-non-ai-job-postings-using-k-means-clustering" id="toc-differences-between-ai-and-non-ai-job-postings-using-k-means-clustering" class="nav-link" data-scroll-target="#differences-between-ai-and-non-ai-job-postings-using-k-means-clustering"><span class="header-section-number">6</span> Differences Between AI and Non-AI Job Postings Using K-Means Clustering</a></li>
   <li><a href="#a-table-displaying-ai-related-jobs" id="toc-a-table-displaying-ai-related-jobs" class="nav-link" data-scroll-target="#a-table-displaying-ai-related-jobs"><span class="header-section-number">7</span> A Table Displaying AI Related Jobs</a></li>
   <li><a href="#logistic-regression-analysis" id="toc-logistic-regression-analysis" class="nav-link" data-scroll-target="#logistic-regression-analysis"><span class="header-section-number">8</span> Logistic Regression Analysis</a></li>
+  <li><a href="#decision-tree-classifier" id="toc-decision-tree-classifier" class="nav-link" data-scroll-target="#decision-tree-classifier"><span class="header-section-number">9</span> Decision Tree Classifier</a></li>
   </ul>
 </nav>
     </div>
@@ -299,6 +300,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="logistic-regression-analysis" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Logistic Regression Analysis</h1>
 <p>We assessed the relationship between job characteristics and the likelihood of a role being AI-related using logistic regression. The model incorporated variables such as industry classification (NAICS codes), job titles, and experience levels, and we applied weights to account for the class imbalance, as AI-related postings represent a small minority of all jobs. From the analysis, we deduced that industries like information, software, and professional and technical services had a higher probability of including AI-related roles. Experience level contributed modestly, indicating that AI positions tend to require more specialized or senior expertise. The model achieved an ROC AUC of approximately 0.62 and an accuracy of 0.63, suggesting that while the logistic regression captured some patterns distinguishing AI and non-AI postings, there remains substantial overlap across industries and experience levels.</p>
+</section>
+<section id="decision-tree-classifier" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Decision Tree Classifier</h1>
+<p>We then developed a decision tree classifier to better understand the factors that differentiate AI-related roles from non-AI ones. The tree achieved a high accuracy of about 97%, but its ROC AUC of 0.48 revealed that it primarily predicted the majority (non-AI) class correctly and struggled to identify minority AI postings. From the splits, we deduced that industry classification was the strongest predictor, consistently appearing near the root, while experience acted as a secondary factor. This suggests that whether a job is AI-related depends first on the industry and then on the required level of expertise. The results also highlighted the strong imbalance in AI postings, with only a few sectors consistently containing these roles.</p>
 
 
 </section>
