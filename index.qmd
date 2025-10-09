@@ -15,3 +15,7 @@ text-align: center;
 <div style="text-align: center;">
 This is an analysis of the rapidly transforming job market and the growing influence of artificial intelligence conducting by Ryan Martin and Tracy Anyasi
 </div>
+
+<div style="text-align: center;">
+Disclaimer: Built with the help of Generative AI
+</div>
